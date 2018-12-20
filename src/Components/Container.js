@@ -59,11 +59,3 @@ export default class Container extends Component {
       );
   }
 }
-
-/*
-input {
-  color:red;
-  height:200px;
-  font-size:14pt;
-}
-*/
