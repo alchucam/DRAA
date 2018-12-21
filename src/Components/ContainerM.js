@@ -1,7 +1,7 @@
 //oninput instead of onchange
 
 import React, { Component } from "react";
-import './Container.css';
+import './ContainerM.css';
 
 
 
@@ -31,11 +31,10 @@ export default class Container extends Component {
         <fieldset>
           <legend> {legendName} : {sidenote}</legend>
 
-          <textarea id="textarea1"
+          <textarea id="textarea2"
                     value={sequence}
-                    onChange={this.handleChange}
-                    type="text"
                     spellcheck="false"
+
                     />
         </fieldset>
       );
