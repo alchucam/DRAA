@@ -8,12 +8,10 @@ import './Convert.css'
 
 var aa = ["Ala", "Arg", "Asn", "Asp", "Cys", "Glu", "Gln", "Gly", "His", "Ile", "Leu", "Lys", "Met", "Phe", "Pro", "Ser", "Thr", "Trp", "Tyr", "Val"];
 
-// var pause = false;
-
+var pause = false;
 export var DNAsequence = '';
 export var RNAsequence = '';
 export var AAsequence = '';
-
 
 function replaceAt(string, index, replace) {
   return string.substring(0, index) + replace + string.substring(index + 1);
@@ -257,7 +255,7 @@ export default class Convert extends Component {
     }
     sequence = capitalizeFirstPre(sequence);
 
-    if (breakDownAA(sequence) && /^[A-Za-z]+$/.test(sequence)){
+    if (breakDownAA(sequence)){
         this.setState({legendName:'AMINO ACID', sequence});
     }
 
@@ -267,9 +265,6 @@ export default class Convert extends Component {
   render() {
     const legendName = this.state.legendName;
     const sequence = this.state.sequence;
-    // var DNAsequence = '';
-    // var RNAsequence = '';
-    // var AAsequence = '';
     DNAsequence = '';
     RNAsequence = '';
     AAsequence = '';

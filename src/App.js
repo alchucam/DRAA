@@ -1,24 +1,28 @@
 import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom'
-// import { render } from 'react-dom'
 //import logo from './logo.svg';
 import './App.css';
 
 import NavMain from './Components/NavMain';
+
 // import Convert from './Components/Convert';
 import Main from './Components/Main';
 import NavSide from './Components/NavSide';
+import { BrowserRouter } from 'react-router-dom'
 
 class App extends Component {
+
+
+
   render() {
+
+
     return (
-      <BrowserRouter>
+        <BrowserRouter>
         <div>
           <NavMain/>
           <Main/>
-          
-        </div>
-      </BrowserRouter>
+          </div>
+        </BrowserRouter>
     );
   }
 }
