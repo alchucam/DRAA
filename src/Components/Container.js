@@ -28,14 +28,14 @@ export default class Container extends Component {
       const sequence = this.props.sequence;
       const sidenote = this.props.sidenote;
       return (
-        <fieldset>
+        <fieldset id="wrapperfs1">
           <legend> {legendName} : {sidenote}</legend>
 
           <textarea id="textarea1"
                     value={sequence}
                     onChange={this.handleChange}
                     type="text"
-                    spellcheck="false"
+                    spellCheck="false"
                     />
         </fieldset>
       );

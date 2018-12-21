@@ -7,6 +7,7 @@ import './App.css';
 import NavMain from './Components/NavMain';
 // import Convert from './Components/Convert';
 import Main from './Components/Main';
+import NavSide from './Components/NavSide';
 
 class App extends Component {
   render() {
@@ -15,7 +16,7 @@ class App extends Component {
         <div>
           <NavMain/>
           <Main/>
-
+          
         </div>
       </BrowserRouter>
     );

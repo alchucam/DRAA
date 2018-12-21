@@ -1,30 +1,19 @@
 
+#wrapperfsside {
 
-* {
-  outline:none;
-	border:none;
-	margin:0px;
+  float:right;
+  width:18%;
 
-	padding:0px;
-	font-family:Courier, monospace;
-}
-body {
-	background:#fff //url(https://static.tumblr.com/maopbtg/a5emgtoju/inflicted.png) repeat;
-  margin-left:1%;
-  margin-right:1%;
 }
 
-#wrapperfs2 {
-  width:80%;
-}
-
-#textarea2 {
+#textareaside {
 	/* width:500px; */
-  width:100%;
+  width:90%;
+  position:relative;
+
 	overflow:auto;
 	background-color:#FFF;
-
-  color:transparent;
+	color:#222;
 	font-family:Courier, monospace;
 	font-weight:normal;
 	font-size:24px;
@@ -32,11 +21,11 @@ body {
 	line-height:40px;
 	padding-left:2%;
 	padding-right:2%;
-	padding-top:1%;
-	padding-bottom:5%;
-  
-  text-shadow: 0px 0px 0px black;
-  /* text-shadow: 0px 0px 0px tomato; */
+	padding-top:500%;
+	padding-bottom:200%;
+
+
+
 
 	background-image:url(https://static.tumblr.com/maopbtg/E9Bmgtoht/lines.png), url(https://static.tumblr.com/maopbtg/nBUmgtogx/paper.png);
   /* background-image:url(https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX19158442.jpg); */

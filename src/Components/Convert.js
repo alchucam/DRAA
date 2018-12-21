@@ -2,7 +2,9 @@
 
 import React, { Component } from "react";
 import Container from './Container';
+import NavSide from './NavSide';
 import {geneticCode} from './GeneticCode';
+import './Convert.css'
 
 var aa = ["Ala", "Arg", "Asn", "Asp", "Cys", "Glu", "Gln", "Gly", "His", "Ile", "Leu", "Lys", "Met", "Phe", "Pro", "Ser", "Thr", "Trp", "Tyr", "Val"];
 
@@ -291,7 +293,8 @@ export default class Convert extends Component {
 
 
       return (
-        <div>
+        <div id="containerwrapper">
+
         <Container
           legendName="DNA"
           sidenote="Only A, T, C or G will be inputted"
@@ -307,6 +310,7 @@ export default class Convert extends Component {
           sidenote="Only the valid three-letters Amino Acids or Stop will be inputted"
           sequence={AAsequence}
           onSequenceChange={this.handleAAChange}/>
+
       </div>
       );
   }

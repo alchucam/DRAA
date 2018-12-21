@@ -2,6 +2,7 @@
 
 import React, { Component } from "react";
 import ContainerM from './ContainerM';
+import NavSide from './NavSide';
 import {geneticCode} from './GeneticCode';
 import {DNAsequence, RNAsequence, AAsequence} from './Convert';
 
@@ -29,6 +30,7 @@ export default class Mutate extends Component {
         sidenote="Only the valid three-letters Amino Acids or Stop will be inputted"
         sequence={AAsequence}
         />
+
     </div>
     )
   }
