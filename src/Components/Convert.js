@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 import Container from './Container';
-import NavSide from './NavSide';
+
 import {geneticCode} from './GeneticCode';
 import './Convert.css'
 
