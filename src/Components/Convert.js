@@ -8,7 +8,6 @@ import './Convert.css'
 
 var aa = ["Ala", "Arg", "Asn", "Asp", "Cys", "Glu", "Gln", "Gly", "His", "Ile", "Leu", "Lys", "Met", "Phe", "Pro", "Ser", "Thr", "Trp", "Tyr", "Val"];
 
-var pause = false;
 export var DNAsequence = '';
 export var RNAsequence = '';
 export var AAsequence = '';
@@ -55,23 +54,10 @@ function breakDownAA(sequence){
       start = start +4;
       end = start + 3;
     }
-    /*
-    else if (sequence.substring(start, end) === 'Sto'){
-      check = true;
-      start = start +3;
-      end = start + 3;
-    }
-    */
+
     else {
       for (var key in aa){
-        // console.log("inside");
-        // console.log(aa[key]);
-        // if (sequence.substring(start, end+1) === 'Stop'){
-        //   check = true;
-        //   start = start +4;
-        //   end = start + 3;
-        //   break;
-        // }
+
         if (sequence.substring(start,end) === aa[key]){
           check = true;
           start = start +3;
@@ -89,8 +75,7 @@ function breakDownAA(sequence){
       return false;
     }
     else if (!check){
-      // console.log(sequence);
-      // console.log(sequence.substring(start,end));
+
       twoCheck = true;
       start = start +3;
       end = start+3;
