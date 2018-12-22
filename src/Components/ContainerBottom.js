@@ -9,6 +9,10 @@ import { DSDiff, ASDiff, countSub, countNon, countMis, countSil, countIns, count
 
 
 
+
+
+
+
 export default class ContainerBottom extends Component {
   constructor(props) {
     super(props);
@@ -26,12 +30,13 @@ export default class ContainerBottom extends Component {
 
 
   render() {
-      const legendName = this.props.legendName;
+
       const Dsequence = this.props.Dsequence;
       const Asequence = this.props.Asequence;
       const isMutating = this.props.isMutating;
       const counter = this.props.counter;
-      const name = this.props.name;
+      const name1 = this.props.name1;
+      const name2 = this.props.name2;
       const DNAoriginal = this.props.DNAoriginal;
       const AAoriginal = this.props.AAoriginal;
 
@@ -39,19 +44,12 @@ export default class ContainerBottom extends Component {
 
       return (
         <fieldset id="wrapperfsB">
-          <legend> {legendName} </legend>
+
           <div id="textareaB"
                     spellCheck="false"
                     readOnly = {true}
                     >
-                    <ButtonToolbar>
-                      <Button
-                              value={isMutating}
-                              onClick={this.handleChange}
-                              >
-                              {name}
-                      </Button>
-                    </ButtonToolbar>
+
                     Original DNA Sequence: {DNAoriginal} <br/>
                     Mutated DNA Sequence: &nbsp;{Dsequence} <br/>
                     Original AA Sequence: &nbsp;{AAoriginal} <br/>

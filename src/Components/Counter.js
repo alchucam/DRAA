@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import {DNAsequence, AAsequence} from './Convert';
 import {geneticCode} from './GeneticCode';
 import ContainerBottom from './ContainerBottom';
+import Buttonn from './Buttonn';
+import {ButtonToolbar, Button} from "react-bootstrap"
 
 export var gDNAsequence = DNAsequence;
 
@@ -210,20 +212,25 @@ export default class Counter extends Component {
                   }
 
   componentDidMount() {
+
     this.interval = setInterval(() => {
-      this.state.cDNAsequence = mutation(this.state.cDNAsequence);
-      var tempRNA = fromDNA(this.state.cDNAsequence);
-      this.state.cAAsequence = fromRNA(tempRNA);
-      getDsDiff(DNAsequence, this.state.cDNAsequence);
-      getInsDel(DNAsequence, this.state.cDNAsequence);
-      getAsDiff(AAsequence, this.state.cAAsequence, DNAsequence, this.state.cDNAsequence);
-      this.setState({ number: this.state.number + 1,
-                      counter:this.state.number+1,
-                      cDNAsequence: this.state.cDNAsequence,
-                      cAAsequence: this.state.cAAsequence,
-                      DsequencePrint: this.pickErrorDNA(this.state.cDNAsequence),
-                      AsequencePrint: this.pickErrorAA(this.state.cAAsequence),
-                    });
+
+      if (this.props.isMutating){
+        this.state.cDNAsequence = mutation(this.state.cDNAsequence);
+        var tempRNA = fromDNA(this.state.cDNAsequence);
+        this.state.cAAsequence = fromRNA(tempRNA);
+        getDsDiff(DNAsequence, this.state.cDNAsequence);
+        getInsDel(DNAsequence, this.state.cDNAsequence);
+        getAsDiff(AAsequence, this.state.cAAsequence, DNAsequence, this.state.cDNAsequence);
+        this.setState({ number: this.state.number + 1,
+                        counter:this.state.number+1,
+                        cDNAsequence: this.state.cDNAsequence,
+                        cAAsequence: this.state.cAAsequence,
+                        DsequencePrint: this.pickErrorDNA(this.state.cDNAsequence),
+                        AsequencePrint: this.pickErrorAA(this.state.cAAsequence),
+                      });
+      }
+
     }, 1000);
   }
 
@@ -312,28 +319,102 @@ export default class Counter extends Component {
 
   render() {
     const isMutating = this.props.isMutating;
-    // var cDNAsequence = this.props.mDNAsequence;
+    const isRepairing = this.props.isRepairing;
+    // var name = ["Stop", "Mutate", "Repair"];
+    var nameM = this.props.nameM;
+    var nameR = this.props.nameR;
+
+    var onButtonChangeM;
+    var onButtonChangeR;
+
+
 
     var DsequencePrint = this.state.DsequencePrint;
     var AsequencePrint = this.state.AsequencePrint;
 
-    // var cAAsequence = this.props.mAAsequence;
 
-    return (
-        <div>
-      <ContainerBottom
-        legendName="Mutate"
-        isMutating={isMutating}
-        // Dsequence={cDNAsequence}
-        Dsequence={DsequencePrint}
-        Asequence={AsequencePrint}
-        counter={this.state.number}
-        onButtonChange={this.props.onExit}
-        name="Stop"
-        DNAoriginal={DNAsequence}
-        AAoriginal={AAsequence}
-      />
-      </div>
-    )
+
+    if (isMutating && !isRepairing){
+      return (
+          <span>
+            <legend> Mutate && Repair </legend>
+            <ButtonToolbar>
+              <Buttonn
+                    pressed={isMutating}
+                    onButtonChange={this.props.onMExit}
+                    name = {nameM}/>
+              <Buttonn
+                    pressed={isRepairing}
+                    onButtonChange={this.props.onREnter}
+                    name = {nameR}/>
+            </ButtonToolbar>
+            <br/>
+          <ContainerBottom
+            Dsequence={DsequencePrint}
+            Asequence={AsequencePrint}
+            isMutating={isMutating}
+            isRepairing={isRepairing}
+            counter={this.state.number}
+            DNAoriginal={DNAsequence}
+            AAoriginal={AAsequence}
+          />
+        </span>
+      )
+    }
+    else if (isRepairing && !isMutating){
+      return (
+          <span>
+            <legend> Mutate && Repair </legend>
+            <ButtonToolbar>
+              <Buttonn
+                    pressed={isMutating}
+                    onButtonChange={this.props.onMEnter}
+                    name = {nameM}/>
+              <Buttonn
+                    pressed={isRepairing}
+                    onButtonChange={this.props.onRExit}
+                    name = {nameR}/>
+            </ButtonToolbar>
+            <br/>
+          <ContainerBottom
+            Dsequence={DsequencePrint}
+            Asequence={AsequencePrint}
+            isMutating={isMutating}
+            isRepairing={isRepairing}
+            counter={this.state.number}
+            DNAoriginal={DNAsequence}
+            AAoriginal={AAsequence}
+          />
+        </span>
+      )
+    }
+    else {
+      return (
+          <span>
+            <legend> Mutate && Repair </legend>
+            <ButtonToolbar>
+              <Buttonn
+                    pressed={isMutating}
+                    onButtonChange={this.props.onMExit}
+                    name = {nameM}/>
+              <Buttonn
+                    pressed={isRepairing}
+                    onButtonChange={this.props.onRExit}
+                    name = {nameR}/>
+            </ButtonToolbar>
+            <br/>
+          <ContainerBottom
+            Dsequence={DsequencePrint}
+            Asequence={AsequencePrint}
+            isMutating={isMutating}
+            isRepairing={isRepairing}
+            counter={this.state.number}
+            DNAoriginal={DNAsequence}
+            AAoriginal={AAsequence}
+          />
+        </span>
+      )
+    }
+
   }
 }
