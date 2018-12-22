@@ -2,11 +2,9 @@
 
 import React, { Component } from "react";
 import './ContainerBottom.css';
-import {ButtonToolbar, Button, ToggleButtonGroup, ToggleButton} from "react-bootstrap"
+import {ButtonToolbar, Button} from "react-bootstrap"
 //import { Nav, Navbar, NavItem, MenuItem, NavDropdown } from "react-bootstrap";
-import { DSDiff, ASDiff, countSub, countNon, countMis, countSil } from './Mutate.js'
-
-// export var DSDiff = 0;
+import { DSDiff, ASDiff, countSub, countNon, countMis, countSil, countIns, countDel } from './Counter.js'
 
 
 
@@ -24,6 +22,8 @@ export default class ContainerBottom extends Component {
       this.props.onButtonChange(event.target.value);
       // console.log(event.target.value);
   }
+
+
 
   render() {
       const legendName = this.props.legendName;
@@ -57,8 +57,10 @@ export default class ContainerBottom extends Component {
                     Original AA Sequence: &nbsp;{AAoriginal} <br/>
                     Mutated AA Sequence:  &nbsp; {Asequence} <br/>
                     Generation: {counter} &nbsp; DNA Sequence Difference: {DSDiff}% &nbsp; AA Sequence Difference: {ASDiff}% <br/>
-                    # of Mutation -> Substitution: {countSub}  Insertion: Deletion: &nbsp; <br/>
-                    Missense: {countMis} Silent: {countSil} Nonsense: {countNon} 
+                    # of Mutation -> Substitution: {countSub}  Insertion: {countIns} Deletion: {countDel} &nbsp; <br/>
+                    Missense: {countMis} Silent: {countSil} Nonsense: {countNon} <br/>
+
+
             </div>
         </fieldset>
       );
