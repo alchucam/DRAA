@@ -14,6 +14,17 @@ var gAAsequence = AAsequence;
 var dna = ["A","T","C","G"];
 
 var counter = 0;
+export var DSDiff = 0;
+export var ASDiff = 0;
+export var countSub = 0;
+export var countNon = 0;
+export var countMis = 0;
+export var countSil = 0;
+
+var capital = {
+  color: "red",
+};
+
 
 function replaceAt(string, index, replace) {
   return string.substring(0, index) + replace + string.substring(index + 1);
@@ -27,7 +38,7 @@ function mutation(sequence){
     var random = Math.random();
     //0.0333% for 1,000,000 generation
     // if (random < 0.0333){
-    if (random < 0.333){
+    if (random < 0.0333){
       var leafRandom = Math.floor(Math.random()*4);
       while (dna[leafRandom] === sequence[i]){
         leafRandom = Math.floor(Math.random()*4);
@@ -41,30 +52,106 @@ function mutation(sequence){
 
 
 
+function getDsDiff(original, sequence){
+    var count = 0;
+    for (var i = 0; i < original.length; i++){
+      if (original[i] !== sequence[i]){
+        count++;
+      }
+    }
+    countSub = count;
+    DSDiff = (count/(original.length)*100).toFixed(2);
+}
+
+function getAsDiff(original, sequence, DNAoriginal, DNAsequence){
+    var count = 0;
+    var numAA = 0;
+    var startO = 0;
+    var endO = startO+3;
+    var startS = 0;
+    var endS = startS+3;
+    countNon = 0;
+    countSil = 0;
+
+    while (endO <= original.length){
+      console.log(original.substring(startO,endO));
+      console.log(sequence.substring(startO,endO));
+      if (original.substring(startO,endO+1) === 'Stop'){
+        if (sequence.substring(startS, endS+1) === 'Stop'){
+          startS += 4;
+          endS = startS + 3;
+          //check if AA is ok but DNA ok?
+          if (DNAoriginal.substring(startO,endO) !== DNAsequence.substring(startO,endO)){
+            countSil++;
+          }
+        }
+        else {
+          count++;
+          startS += 3;
+          endS = startS +3;
+
+        }
+        startO += 4;
+        endO = startO+3;
+      }
+      else{
+        if (original.substring(startO, endO) === sequence.substring(startS, endS)){
+          startS += 3;
+          endS = startS+3;
+          if (DNAoriginal.substring(startO,endO) !== DNAsequence.substring(startO,endO)){
+            countSil++;
+          }
+        }
+        else{
+          if (sequence.substring(startS, endS+1) === 'Stop'){
+            startS += 4;
+            endS = startS +3;
+            countNon++;
+          }
+          else{
+            startS += 3;
+            endS = startS +3;
+          }
+          count++;
+        }
+        startO += 3;
+        endO = startO +3;
+      }
+      numAA++;
+    }
+    countMis = count;
+    ASDiff = ((count/numAA)*100).toFixed(2);
+}
+
+
 class Counter extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {number: 0, cDNAsequence: DNAsequence};
+    this.state = {number: 0, cDNAsequence: DNAsequence, cAAsequence:AAsequence};
   }
 
   componentDidMount() {
     this.interval = setInterval(() => {
       this.state.cDNAsequence = mutation(this.state.cDNAsequence);
-      this.setState({number: this.state.number + 1, counter:this.state.number+1, cDNAsequence: this.state.cDNAsequence});
+      var tempRNA = fromDNA(this.state.cDNAsequence);
+      this.state.cAAsequence = fromRNA(tempRNA);
+      getDsDiff(DNAsequence, this.state.cDNAsequence);
+      getAsDiff(AAsequence, this.state.cAAsequence, DNAsequence, this.state.cDNAsequence);
+      this.setState({number: this.state.number + 1, counter:this.state.number+1, cDNAsequence: this.state.cDNAsequence, cAAsequence: this.state.cAAsequence});
     }, 1000);
   }
+
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.state.cDNAsequence);
-    console.log(prevProps);
-    console.log(this.props.mDNAsequence);
+
     // Typical usage (don't forget to compare props):
     if (this.state.cDNAsequence !== prevProps.mDNAsequence) {
       gDNAsequence = this.state.cDNAsequence;
+
       this.props.onCounter();
       // console.log(this.state.number);
      }
@@ -72,17 +159,22 @@ class Counter extends React.Component {
 
   render() {
     const isMutating = this.props.isMutating;
-    var cDNAsequence = this.state.cDNAsequence;
+    var cDNAsequence = this.props.mDNAsequence;
+    var cAAsequence = this.props.mAAsequence;
     // counter = this.state.number;
     return (
         <div>
       <ContainerBottom
         legendName="Mutate"
         isMutating={isMutating}
-        sequence={cDNAsequence}
+        Dsequence={cDNAsequence}
+        Asequence={cAAsequence}
         counter={this.state.number}
         onButtonChange={this.props.onExit}
         name="Stop"
+        DNAoriginal={DNAsequence}
+        AAoriginal={AAsequence}
+
       />
       </div>
     )
@@ -190,6 +282,7 @@ export default class Mutate extends Component {
         onCounter={()=> this.setState({mDNAsequence:gDNAsequence})}
         // onCounter={()=> console.log(Dsequence)}
         mDNAsequence={mDNAsequence}
+        mAAsequence={mAAsequence}
         />
       </div>
     )
@@ -214,11 +307,14 @@ export default class Mutate extends Component {
           />
         <ContainerBottom
           legendName="Mutate"
-          sequence={mDNAsequence}
+          Dsequence={mDNAsequence}
+          Asequence={mAAsequence}
           isMutating={isMutating}
           onButtonChange={this.handleMutate}
           counter = {counter}
           name="Mutate"
+          DNAoriginal = {DNAsequence}
+          AAoriginal = {AAsequence}
         />
       </div>
       )
