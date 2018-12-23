@@ -2,10 +2,7 @@
 
 import React, { Component } from "react";
 import './ContainerBottom.css';
-import {ButtonToolbar, Button} from "react-bootstrap"
-//import { Nav, Navbar, NavItem, MenuItem, NavDropdown } from "react-bootstrap";
 import { DSDiff, ASDiff, countSub, countNon, countMis, countSil, countIns, countDel } from './Counter.js'
-
 
 
 
@@ -33,13 +30,12 @@ export default class ContainerBottom extends Component {
 
       const Dsequence = this.props.Dsequence;
       const Asequence = this.props.Asequence;
-      const isMutating = this.props.isMutating;
       const counter = this.props.counter;
-      const name1 = this.props.name1;
-      const name2 = this.props.name2;
       const DNAoriginal = this.props.DNAoriginal;
       const AAoriginal = this.props.AAoriginal;
 
+      const generationRepair = this.props.generationRepair;
+      const targetSequenceRepair = this.props.targetSequenceRepair;
 
 
       return (
@@ -49,7 +45,7 @@ export default class ContainerBottom extends Component {
                     spellCheck="false"
                     readOnly = {true}
                     >
-
+                    <b>Mutate</b> <br/>
                     Original DNA Sequence: {DNAoriginal} <br/>
                     Mutated DNA Sequence: &nbsp;{Dsequence} <br/>
                     Original AA Sequence: &nbsp;{AAoriginal} <br/>
@@ -57,7 +53,9 @@ export default class ContainerBottom extends Component {
                     Generation: {counter} &nbsp; DNA Sequence Difference: {DSDiff}% &nbsp; AA Sequence Difference: {ASDiff}% <br/>
                     # of Mutation -> Substitution: {countSub}  Insertion: {countIns} Deletion: {countDel} &nbsp; <br/>
                     Missense: {countMis} Silent: {countSil} Nonsense: {countNon} <br/>
-
+                    <b>Repair</b> <br />
+                    Target DNA Sequence to fix: {targetSequenceRepair} <br/>
+                    Repair Generation: {generationRepair} <br/>
 
             </div>
         </fieldset>

@@ -8,7 +8,7 @@ import {DNAsequence, RNAsequence, AAsequence} from './Convert';
 import Buttonn from './Buttonn';
 import {ButtonToolbar} from "react-bootstrap"
 
-
+import {generationR} from './Repair';
 
 
 
@@ -71,6 +71,9 @@ export default class Mutate extends Component {
     var nameR = this.state.nameR;
     mRNAsequence = fromDNA(mDNAsequence);
     mAAsequence = fromRNA(mRNAsequence);
+
+
+
 
 
     if (isMutating || isRepairing){
@@ -152,6 +155,8 @@ export default class Mutate extends Component {
             counter = {counter}
             DNAoriginal = {DNAsequence}
             AAoriginal = {AAsequence}
+            generationRepair = {generationR}
+            targetSequenceRepair = {DNAsequence}
           />
         </span>
       </div>
@@ -161,75 +166,6 @@ export default class Mutate extends Component {
 
 
 
-    else if (!isMutating && isRepairing){
-      return (
-        <div>
-      <ContainerM
-        legendName="DNA"
-        sidenote="Only A, T, C or G will be inputted"
-        sequence={mDNAsequence}
-        />
-      <ContainerM
-        legendName="RNA"
-        sidenote="Only U, A, G or C will be inputted"
-        sequence={mRNAsequence}
-        />
-      <ContainerM
-        legendName="AMINO ACID"
-        sidenote="Only the valid three-letters Amino Acids or Stop will be inputted"
-        sequence={mAAsequence}
-        />
-        <ContainerBottom
-          legendName="Mutate"
-          Dsequence={mDNAsequence}
-          Asequence={mAAsequence}
-          isMutating={isMutating}
-          isRepairing={isRepairing}
-          onButtonChange={this.handleRepair}
-          counter = {counter}
-          name1="Mutate"
-          name2="Repair"
-          DNAoriginal = {DNAsequence}
-          AAoriginal = {AAsequence}
-        />
-          testasdasda
-      </div>
-    )
-  }
-    else{
-      return (
-        <div>
-        <ContainerM
-          legendName="DNA"
-          sidenote="Only A, T, C or G will be inputted"
-          sequence={mDNAsequence}
-          />
-        <ContainerM
-          legendName="RNA"
-          sidenote="Only U, A, G or C will be inputted"
-          sequence={mRNAsequence}
-          />
-        <ContainerM
-          legendName="AMINO ACID"
-          sidenote="Only the valid three-letters Amino Acids or Stop will be inputted"
-          sequence={mAAsequence}
-          />
-        <ContainerBottom
-          legendName="Mutate"
-          Dsequence={mDNAsequence}
-          Asequence={mAAsequence}
-          isMutating={isMutating}
-          isRepairing={isRepairing}
-          onButtonChange={this.handleMutate}
-          counter = {counter}
-          name1="Mutate"
-          name2="Repair"
-          DNAoriginal = {DNAsequence}
-          AAoriginal = {AAsequence}
-        />
-      </div>
-      )
-    }
 
   }
 }

@@ -3,18 +3,20 @@ import {DNAsequence, AAsequence} from './Convert';
 import {geneticCode} from './GeneticCode';
 import ContainerBottom from './ContainerBottom';
 import Buttonn from './Buttonn';
-import {ButtonToolbar, Button} from "react-bootstrap"
-
+import {ButtonToolbar} from "react-bootstrap"
+import {repair, generationR, targetSequence} from './Repair'
 export var gDNAsequence = DNAsequence;
 
 
 
 var dna = ["A","T","C","G"];
 var type = ["Sub", "Ins", "Del"];
+//for setState
+var tempRNA = '';
+var tempcAAsequence = '';
+var tempcDNAsequence = '';
 
 export var counter = 0;
-
-
 export var DSDiff = 0;
 export var ASDiff = 0;
 export var countSub = 0;
@@ -74,7 +76,8 @@ function mutation(sequence){
 
 
 
-function getDsDiff(original, sequence){
+
+export function getDsDiff(original, sequence){
     var count = 0;
     DSDIFFpos = [];
     for (var i = 0; i < original.length; i++){
@@ -84,7 +87,7 @@ function getDsDiff(original, sequence){
       }
     }
     countSub = count;
-    DSDiff = (count/(original.length)*100).toFixed(2);
+    return (count/(original.length)*100);
 }
 
 function getAsDiff(original, sequence, DNAoriginal, DNAsequence){
@@ -208,26 +211,60 @@ export default class Counter extends Component {
                   cDNAsequence: DNAsequence,
                   cAAsequence:AAsequence,
                   DsequencePrint: DNAsequence,
-                  AsequencePrint: AAsequence};
+                  AsequencePrint: AAsequence,
+                  generationRepair: 0,
+                  targetSequenceRepair: DNAsequence,
+                  };
                   }
 
   componentDidMount() {
 
     this.interval = setInterval(() => {
 
-      if (this.props.isMutating){
-        this.state.cDNAsequence = mutation(this.state.cDNAsequence);
-        var tempRNA = fromDNA(this.state.cDNAsequence);
-        this.state.cAAsequence = fromRNA(tempRNA);
-        getDsDiff(DNAsequence, this.state.cDNAsequence);
-        getInsDel(DNAsequence, this.state.cDNAsequence);
-        getAsDiff(AAsequence, this.state.cAAsequence, DNAsequence, this.state.cDNAsequence);
+      if (this.props.isMutating && !this.props.isRepairing){
+
+        tempcDNAsequence = mutation(this.state.cDNAsequence);
+        tempRNA = fromDNA(tempcDNAsequence);
+        tempcAAsequence = fromRNA(tempRNA);
+        DSDiff = getDsDiff(DNAsequence, tempcDNAsequence);
+        DSDiff = DSDiff.toFixed(2);
+        getInsDel(DNAsequence, tempcDNAsequence);
+        getAsDiff(AAsequence, tempcAAsequence, DNAsequence, tempcDNAsequence);
         this.setState({ number: this.state.number + 1,
                         counter:this.state.number+1,
-                        cDNAsequence: this.state.cDNAsequence,
-                        cAAsequence: this.state.cAAsequence,
-                        DsequencePrint: this.pickErrorDNA(this.state.cDNAsequence),
-                        AsequencePrint: this.pickErrorAA(this.state.cAAsequence),
+                        cDNAsequence: tempcDNAsequence,
+                        cAAsequence: tempcAAsequence,
+                        DsequencePrint: this.pickErrorDNA(tempcDNAsequence),
+                        AsequencePrint: this.pickErrorAA(tempcAAsequence),
+                        generationRepair: generationR,
+                        targetSequenceRepair: targetSequence,
+                      });
+      }
+      else if (this.props.isRepairing && !this.props.isMutating){
+        // repair(DNAsequence, this.state.cDNAsequence);
+        repair(DNAsequence, this.state.cDNAsequence);
+        this.props.onRExit();
+      }
+      else if (this.props.isMutating && this.props.isRepairing){
+        // repair(DNAsequence, this.state.cDNAsequence);
+        repair(DNAsequence, this.state.cDNAsequence);
+        tempcDNAsequence = mutation(this.state.cDNAsequence);
+        tempRNA = fromDNA(tempcDNAsequence);
+        // this.state.cAAsequence
+        tempcAAsequence  = fromRNA(tempRNA);
+        DSDiff = getDsDiff(DNAsequence, tempcDNAsequence);
+        DSDiff = DSDiff.toFixed(2);
+        getInsDel(DNAsequence, tempcDNAsequence);
+        getAsDiff(AAsequence, tempcAAsequence, DNAsequence, tempcDNAsequence);
+        this.props.onRExit();
+        this.setState({ number: this.state.number + 1,
+                        counter:this.state.number+1,
+                        cDNAsequence: tempcDNAsequence,
+                        cAAsequence: tempcAAsequence,
+                        DsequencePrint: this.pickErrorDNA(tempcDNAsequence),
+                        AsequencePrint: this.pickErrorAA(tempcAAsequence),
+                        generationRepair: generationR,
+                        targetSequenceRepair: targetSequence,
                       });
       }
 
@@ -324,11 +361,6 @@ export default class Counter extends Component {
     var nameM = this.props.nameM;
     var nameR = this.props.nameR;
 
-    var onButtonChangeM;
-    var onButtonChangeR;
-
-
-
     var DsequencePrint = this.state.DsequencePrint;
     var AsequencePrint = this.state.AsequencePrint;
 
@@ -357,6 +389,8 @@ export default class Counter extends Component {
             counter={this.state.number}
             DNAoriginal={DNAsequence}
             AAoriginal={AAsequence}
+            generationRepair = {generationR}
+            targetSequenceRepair = {targetSequence}
           />
         </span>
       )
@@ -384,6 +418,8 @@ export default class Counter extends Component {
             counter={this.state.number}
             DNAoriginal={DNAsequence}
             AAoriginal={AAsequence}
+            generationRepair = {generationR}
+            targetSequenceRepair = {targetSequence}
           />
         </span>
       )
@@ -411,6 +447,8 @@ export default class Counter extends Component {
             counter={this.state.number}
             DNAoriginal={DNAsequence}
             AAoriginal={AAsequence}
+            generationRepair = {generationR}
+            targetSequenceRepair = {targetSequence}
           />
         </span>
       )
