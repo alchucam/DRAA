@@ -26,7 +26,6 @@ export default class Buttonn extends Component {
           {name}
         </Button>
 
-
     )
   }
 }

@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 import Container from './Container';
-
+import {Button, ButtonToolbar} from "react-bootstrap"
 import {geneticCode} from './GeneticCode';
 import './Convert.css'
 
@@ -203,6 +203,7 @@ export default class Convert extends Component {
     this.handleDNAChange = this.handleDNAChange.bind(this);
     this.handleRNAChange = this.handleRNAChange.bind(this);
     this.handleAAChange = this.handleAAChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {legendName:'',sequence:''};
   }
 
@@ -215,9 +216,6 @@ export default class Convert extends Component {
     if (/^[ATCG]+$/.test(sequence)){
       this.setState({legendName:'DNA', sequence});
     }
-
-
-
   }
 
   handleRNAChange(sequence){
@@ -230,10 +228,6 @@ export default class Convert extends Component {
     }
   }
 
-
-
-
-
   handleAAChange(sequence){
     if (sequence === ''){
       this.setState({legendName:'AMINO ACID',sequence});
@@ -243,13 +237,43 @@ export default class Convert extends Component {
     if (breakDownAA(sequence)){
         this.setState({legendName:'AMINO ACID', sequence});
     }
-
-
   }
+
+  // handleSubmit(pressed, name){
+  handleSubmit(){
+    var payload = [{
+      DNAsequence:DNAsequence,
+      RNAsequence:RNAsequence,
+      AAsequence:AAsequence
+    }];
+    // var data = JSON.stringify(payload);
+
+
+    fetch('/', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(function(response){
+      return response;
+     }).then(function(body){
+       console.log(body);
+
+    });
+  }
+
+
+
+
+
 
   render() {
     const legendName = this.state.legendName;
     const sequence = this.state.sequence;
+
     DNAsequence = '';
     RNAsequence = '';
     AAsequence = '';
@@ -290,7 +314,18 @@ export default class Convert extends Component {
           sidenote="Only the valid three-letters Amino Acids or Stop will be inputted"
           sequence={AAsequence}
           onSequenceChange={this.handleAAChange}/>
+        <span>
+          <legend> Submit to database </legend>
+          <ButtonToolbar>
+            <Button
+                  onClick={this.handleSubmit}
+                  >
+                  {"Save"}
+                  </Button>
+          </ButtonToolbar>
+          <br/>
 
+        </span>
       </div>
       );
   }
