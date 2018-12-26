@@ -12,6 +12,8 @@ export var DNAsequence = '';
 export var RNAsequence = '';
 export var AAsequence = '';
 
+
+
 function replaceAt(string, index, replace) {
   return string.substring(0, index) + replace + string.substring(index + 1);
 }
@@ -85,6 +87,14 @@ function breakDownAA(sequence){
   return true;
 }
 
+function reduceGenCodeRNA(sequence, start, end){
+  return geneticCode.reduce(function (codon, geneticCode){ return (codon.RNA === sequence.substring(start, end)) ? codon : geneticCode;},{});
+}
+
+function reduceGenCodeAA(sequence, start, end){
+   return geneticCode.reduce(function (codon, geneticCode){ return (codon.AA === sequence.substring(start, end)) ? codon : geneticCode;},{});
+}
+
 function fromRNA(toName, sequence){
   if (toName === 'DNA'){
     for (var i = 0; i < sequence.length; i++){
@@ -106,8 +116,9 @@ function fromRNA(toName, sequence){
     var start = 0;
     var end = start+3;
     while (end <= sequence.length){
-      var sub = geneticCode.reduce(function (codon, geneticCode){
-        return (codon.RNA === sequence.substring(start, end)) ? codon : geneticCode;},{});
+      var sub = reduceGenCodeRNA(sequence, start, end);
+      // var sub = geneticCode.reduce(function (codon, geneticCode){
+      //   return (codon.RNA === sequence.substring(start, end)) ? codon : geneticCode;},{});
       sequence = sequence.replace(sequence.substring(start,end), sub.AA);
       if (sub.AA === 'Stop'){
         start = start+4;
@@ -155,8 +166,9 @@ function fromAA(toName, sequence){
         sequence = sequence.replace(sequence.substring(start, end+1), "UAG");
       }
       else {
-        var sub = geneticCode.reduce(function (codon, geneticCode){
-          return (codon.AA === sequence.substring(start, end)) ? codon : geneticCode;},{});
+        var sub = reduceGenCodeAA(sequence, start, end);
+        // var sub = geneticCode.reduce(function (codon, geneticCode){
+        //   return (codon.AA === sequence.substring(start, end)) ? codon : geneticCode;},{});
         if (sub.RNA === 'GGG'){
           sequence = sequence.replace(sequence.substring(start,end), 'XXX');
         }
@@ -197,6 +209,8 @@ function tryConvert(fromName, toName, sequence){
   return output;
 }
 
+
+
 export default class Convert extends Component {
   constructor(props){
     super(props);
@@ -204,7 +218,10 @@ export default class Convert extends Component {
     this.handleRNAChange = this.handleRNAChange.bind(this);
     this.handleAAChange = this.handleAAChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {legendName:'',sequence:''};
+    this.handleLoad = this.handleLoad.bind(this);
+    this.handleExchange = this.handleExchange.bind(this);
+    this.state = {legendName:'',sequence:'', loadData: [],
+                  DNAsequence: '', RNAsequence:'', AAsequence:''};
   }
 
   handleDNAChange(sequence){
@@ -259,24 +276,54 @@ export default class Convert extends Component {
     })
     .then(function(response){
       return response;
-     }).then(function(body){
-       console.log(body);
-
     });
   }
 
 
+  handleLoad(){
+    fetch('/get',{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      mode: "cors"
+    }).then(function(response){
+      if (response.status >= 400){
+        throw new Error("Bad");
+      }
+      return response.json();
+    // }).then(function(body){
+    }).then((body)=>{
+      var data = [];
+      for (var i = 0; i < body.length; i++){
+        data.push(body[i].DNAsequence);
+      }
+      this.setState({loadData: data});
+      // this.setState({loadData: JSON.stringify(body)});
+    }).catch(err=>{
+      console.log("caught error", err);
+    });
 
+  }
 
+ handleExchange(data){
+   var tempRNAsequence = tryConvert('DNA', 'RNA', data);
+   var tempAAsequence = tryConvert('RNA', 'AMINO ACID', tempRNAsequence)
+   this.setState({legendName: 'DNA', sequence: data, DNAsequence: data, RNAsequence: tempRNAsequence, AAsequence: tempAAsequence});
+ }
 
 
   render() {
     const legendName = this.state.legendName;
     const sequence = this.state.sequence;
 
-    DNAsequence = '';
-    RNAsequence = '';
-    AAsequence = '';
+    DNAsequence = this.state.DNAsequence;
+    RNAsequence = this.state.RNAsequence;
+    AAsequence = this.state.AAsequence;
+    // DNAsequence = '';
+    // RNAsequence = '';
+    // AAsequence = '';
     if (legendName === 'DNA'){
       DNAsequence = sequence;
       RNAsequence = tryConvert('DNA', 'RNA', sequence);
@@ -290,8 +337,8 @@ export default class Convert extends Component {
     else if (legendName === 'AMINO ACID'){
       RNAsequence = tryConvert('AMINO ACID', 'RNA', sequence);
       DNAsequence = tryConvert('RNA', 'DNA', RNAsequence);
-       AAsequence = sequence;
-      //AAsequence = tryConvert('RNA','AMINO ACID', RNAsequence)
+      AAsequence = sequence;
+
     }
 
 
@@ -315,16 +362,23 @@ export default class Convert extends Component {
           sequence={AAsequence}
           onSequenceChange={this.handleAAChange}/>
         <span>
-          <legend> Submit to database </legend>
+          <legend> Database </legend>
           <ButtonToolbar>
             <Button
                   onClick={this.handleSubmit}
                   >
                   {"Save"}
                   </Button>
+            <Button
+                  onClick={this.handleLoad}
+                  >
+                  {"Load"}
+                  </Button>
           </ButtonToolbar>
           <br/>
-
+          {this.state.loadData.map((data, index) => (
+            <h1 key={index} onClick={() => this.handleExchange(data)}>{index}: {data}</h1>
+          ))}
         </span>
       </div>
       );

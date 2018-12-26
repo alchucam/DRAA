@@ -13,16 +13,11 @@ import { DSDiff, ASDiff, countSub, countNon, countMis, countSil, countIns, count
 export default class ContainerBottom extends Component {
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
     this.state = {
       isMutating: false,
     };
   }
 
-  handleChange(event) {
-      this.props.onButtonChange(event.target.value);
-      // console.log(event.target.value);
-  }
 
 
 

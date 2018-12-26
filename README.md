@@ -46,8 +46,10 @@ SHOW GLOBAL VARIABLES LIKE 'PORT';
 
 basic mysql commands:
 https://www.a2hosting.com/kb/developer-corner/mysql/managing-mysql-databases-and-users-from-the-command-line
+<br/>
 https://www.pantz.org/software/mysql/mysqlcommands.html
 
 #### interaction between frontend and backend
 https://stackoverflow.com/questions/41332643/sending-data-to-database-in-react-js-web-application
+<br/>
 https://hashnode.com/post/how-can-use-react-js-node-js-mysql-together-cjdlfbukh01vqn9wuaucmng6h

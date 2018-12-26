@@ -6,8 +6,8 @@ import ContainerBottom from './ContainerBottom';
 import Counter, {gDNAsequence, counter, fromRNA, fromDNA} from './Counter';
 import {DNAsequence, RNAsequence, AAsequence} from './Convert';
 import Buttonn from './Buttonn';
-import {ButtonToolbar} from "react-bootstrap"
-
+import {ButtonToolbar} from "react-bootstrap";
+import Chart from './Chart';
 import {generationR} from './Repair';
 
 
@@ -27,6 +27,8 @@ export default class Mutate extends Component {
                   isRepairing:false,
                   nameM: "Mutate",
                   nameR: "Repair",
+                  scrollStart: 0, scrollEnd: 20,
+                  number: 0,
                 };
   }
 
@@ -61,6 +63,7 @@ export default class Mutate extends Component {
 
 
 
+
   render() {
     var mDNAsequence = this.state.mDNAsequence;
     var mRNAsequence = this.state.mRNAsequence;
@@ -71,10 +74,7 @@ export default class Mutate extends Component {
     var nameR = this.state.nameR;
     mRNAsequence = fromDNA(mDNAsequence);
     mAAsequence = fromRNA(mRNAsequence);
-
-
-
-
+    // listSub, listIns, listDel, listMis, listSil, listNon,
 
     if (isMutating || isRepairing){
 
@@ -114,6 +114,7 @@ export default class Mutate extends Component {
     )
   }
     else if (!isMutating && !isRepairing){ //base
+
       return (
         <div>
       <ContainerM
@@ -146,8 +147,12 @@ export default class Mutate extends Component {
                   />
           </ButtonToolbar>
           <br/>
-          <ContainerBottom
+          <Chart
 
+            />
+
+          <br/>
+          <ContainerBottom
             Dsequence={DNAsequence}
             Asequence={AAsequence}
             isMutating={isMutating}
@@ -162,10 +167,6 @@ export default class Mutate extends Component {
       </div>
     )
     }
-
-
-
-
 
   }
 }
