@@ -32,6 +32,18 @@ class App extends Component {
   };
   */
 
+  authenticate(){
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("root").style.display = "none";
+    return new Promise(resolve => setTimeout(resolve, 3000))
+  }
+  componentDidMount() {
+    this.authenticate().then(()=>{
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("root").style.display = "block";
+    })
+  }
+
   render() {
     return (
         <BrowserRouter>

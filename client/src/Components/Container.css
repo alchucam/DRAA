@@ -6,7 +6,6 @@
 	margin:0px;
 
 	padding:0px;
-	font-family:Courier, monospace;
 }
 body {
 	background:#fff //url(https://static.tumblr.com/maopbtg/a5emgtoju/inflicted.png) repeat;
@@ -25,7 +24,6 @@ body {
 	overflow:auto;
 	background-color:#FFF;
 	color:#222;
-	font-family:Courier, monospace;
 	font-weight:normal;
 	font-size:24px;
 	resize:none;

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { Link } from 'react-router-dom'
+import { LinkContainer } from 'react-router-bootstrap';
 
 var capital = {
   color: "red",
@@ -17,12 +18,9 @@ export default class NavMain extends Component {
               </Navbar.Brand>
             </Navbar.Header>
             <Nav>
-              <NavItem eventKey={1}>
-                <Link to='/mutate'>Mutate</Link>
-              </NavItem>
-              <NavItem eventKey={2} href="#">
-                Temp
-              </NavItem>
+              <LinkContainer exact to='/mutate'>
+                <NavItem>Mutate</NavItem>
+              </LinkContainer>
             </Nav>
           </Navbar>
     )

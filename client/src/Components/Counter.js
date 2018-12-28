@@ -218,8 +218,8 @@ export default class Counter extends Component {
                   numberList: [0],
                   cDNAsequence: DNAsequence,
                   cAAsequence:AAsequence,
-                  DsequencePrint: DNAsequence,
-                  AsequencePrint: AAsequence,
+                  DsequencePrint: [DNAsequence],
+                  AsequencePrint: [AAsequence],
                   generationRepair: 0,
                   targetSequenceRepair: DNAsequence,
                   scrollStart: 0, scrollEnd: 20,
@@ -323,11 +323,13 @@ export default class Counter extends Component {
 
   pickErrorDNA = (Dsequence) =>{
     var errorLine = [];
+    var keyN = 0;
     for (var i = 0; i < Dsequence.length; i++){
       if (DSDIFFpos !== undefined && DSDIFFpos.length !== 0){
         if (DSDIFFpos[0] === i){
-          errorLine.push(<span style={capital}>{Dsequence[i]}</span>);
+          errorLine.push(<span key={keyN} style={capital}>{Dsequence[i]}</span>);
           DSDIFFpos.shift();
+          keyN++;
         }
         else{
           errorLine.push(Dsequence[i]);
@@ -339,10 +341,12 @@ export default class Counter extends Component {
         }
         else if (i <= DNAsequence.length){
           errorLine.push(Dsequence.substring(i,DNAsequence.length));
-          errorLine.push(<span style={capital}>{Dsequence.substring(DNAsequence.length)}</span>);
+          errorLine.push(<span key={keyN} style={capital}>{Dsequence.substring(DNAsequence.length)}</span>);
+          keyN++;
         }
         else {
-          errorLine.push(<span style={capital}>{Dsequence.substring(DNAsequence.length)}</span>);
+          errorLine.push(<span key={keyN} style={capital}>{Dsequence.substring(DNAsequence.length)}</span>);
+          keyN++;
         }
         break;
       }
@@ -353,12 +357,13 @@ export default class Counter extends Component {
   pickErrorAA = (Asequence) =>{
     var errorLine = [];
     var i = 0;
-
+    var keyN = 0;
     while (i <= Asequence.length){
 
       if (ASDIFFposS !== undefined && ASDIFFposS.length !== 0){
         if (ASDIFFposS[0] === i){
-          errorLine.push(<span style={capital}>{Asequence.substring(ASDIFFposS[0],ASDIFFposE[0])}</span>);
+          errorLine.push(<span key={keyN} style={capital}>{Asequence.substring(ASDIFFposS[0],ASDIFFposE[0])}</span>);
+          keyN++;
           i += (ASDIFFposE[0] - ASDIFFposS[0]);
           ASDIFFposS.shift();
           ASDIFFposE.shift();
@@ -375,10 +380,12 @@ export default class Counter extends Component {
         else {
           if (i <= AAsequence.length){
             errorLine.push(Asequence.substring(i,AAsequence.length));
-            errorLine.push(<span style={capital}>{Asequence.substring(AAsequence.length)}</span>);
+            errorLine.push(<span key={keyN} style={capital}>{Asequence.substring(AAsequence.length)}</span>);
+            keyN++;
           }
           else {
-            errorLine.push(<span style={capital}>{Asequence.substring(AAsequence.length)}</span>);
+            errorLine.push(<span key={keyN} style={capital}>{Asequence.substring(AAsequence.length)}</span>);
+            keyN++;
           }
         }
         break;
@@ -421,8 +428,8 @@ export default class Counter extends Component {
               mis = {this.state.mis} sil = {this.state.sil} non = {this.state.non}
               />
           <ContainerBottom
-            Dsequence={DsequencePrint}
-            Asequence={AsequencePrint}
+            DsequencePrint={DsequencePrint}
+            AsequencePrint={AsequencePrint}
             isMutating={isMutating}
             isRepairing={isRepairing}
             counter={this.state.number}
@@ -457,8 +464,8 @@ export default class Counter extends Component {
               mis = {this.state.mis} sil = {this.state.sil} non = {this.state.non}
               />
           <ContainerBottom
-            Dsequence={DsequencePrint}
-            Asequence={AsequencePrint}
+            DsequencePrint={DsequencePrint}
+            AsequencePrint={AsequencePrint}
             isMutating={isMutating}
             isRepairing={isRepairing}
             counter={this.state.number}
@@ -493,8 +500,8 @@ export default class Counter extends Component {
               mis = {this.state.mis} sil = {this.state.sil} non = {this.state.non}
               />
           <ContainerBottom
-            Dsequence={DsequencePrint}
-            Asequence={AsequencePrint}
+            DsequencePrint={DsequencePrint}
+            AsequencePrint={AsequencePrint}
             isMutating={isMutating}
             isRepairing={isRepairing}
             counter={this.state.number}

@@ -1,0 +1,71 @@
+
+
+/** Loading **/
+/*animation*/
+@keyframes heartbeat
+{
+  0%
+  {
+    transform: scale( .80 );
+  }
+  20%
+  {
+    transform: scale( 1 );
+  }
+  40%
+  {
+    transform: scale( .80 );
+  }
+  60%
+  {
+    transform: scale( 1 );
+  }
+  80%
+  {
+    transform: scale( .80 );
+  }
+  100%
+  {
+    transform: scale( .80 );
+  }
+}
+
+#loading-image {
+  top:30%;
+  left:40%;
+  position:fixed;
+  animation: heartbeat 2s infinite;
+}
+
+#loading-image-width {
+  width: 300px;
+}
+
+#loadng-text {
+  top:30%;
+  left:40%;
+  position:fixed;
+  font-family: "Times New Roman", Times, serif;
+}
+
+@media only screen and (max-width:1025px){
+  #loading-image {
+    top:35%;
+    left:36%;
+    position:fixed;
+  }
+  #loading-image-width {
+    width: 250px;
+  }
+}
+
+@media only screen and (max-width: 460px){
+  #loading-image {
+    top:35%;
+    left:27%;
+    position:fixed;
+  }
+  #loading-image-width {
+    width: 200px;
+  }
+}

@@ -147,14 +147,11 @@ export default class Mutate extends Component {
                   />
           </ButtonToolbar>
           <br/>
-          <Chart
-
-            />
-
+          <Chart/>
           <br/>
           <ContainerBottom
-            Dsequence={DNAsequence}
-            Asequence={AAsequence}
+            DsequencePrint={[DNAsequence]}
+            AsequencePrint={[AAsequence]}
             isMutating={isMutating}
             isRepairing={isRepairing}
             counter = {counter}

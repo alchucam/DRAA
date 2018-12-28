@@ -3,16 +3,38 @@ import React, { Component } from "react";
 import Plot from 'react-plotly.js';
 
 
+
 export default class Chart extends Component {
+  constructor(props){
+      super(props);
+      this.state = {width: window.innerWidth, height: window.innerHeight };
+      this.getWindowDimensions = this.getWindowDimensions.bind(this);
+    }
+
+
+
+  getWindowDimensions(){
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
+
+  componentDidMount(){
+    window.addEventListener('resize', this.getWindowDimensions);
+  }
+
+  componentWillUnmount(){
+    window.addEventListener('resize', this.getWindowDimensions);
+  }
 
   render(){
+      var chartWidth = this.state.width < 450 ? this.state.width - 10 : this.state.width - 50;
       var layout = {
       title: "Mutations in Generation",
       xaxis: {title: "Generation",
               range: [this.props.scrollStart, this.props.scrollEnd+1]},
       yaxis: {title: "Number"},
       barmode: "stack",
-
+      width:chartWidth,
+      autosize:true,
       };
     return(
       <span>
@@ -57,7 +79,7 @@ export default class Chart extends Component {
           {
             x: this.props.number,
             y: this.props.non, name: "Nonsense",
-            marker: {color: "rgb(255, 217, 102)"},
+            marker: {color: "rgb(255, 92, 51)"},
             opacity: 0.60,
             type: "bar"
           },

@@ -321,9 +321,6 @@ export default class Convert extends Component {
     DNAsequence = this.state.DNAsequence;
     RNAsequence = this.state.RNAsequence;
     AAsequence = this.state.AAsequence;
-    // DNAsequence = '';
-    // RNAsequence = '';
-    // AAsequence = '';
     if (legendName === 'DNA'){
       DNAsequence = sequence;
       RNAsequence = tryConvert('DNA', 'RNA', sequence);

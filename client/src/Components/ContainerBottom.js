@@ -23,15 +23,14 @@ export default class ContainerBottom extends Component {
 
   render() {
 
-      const Dsequence = this.props.Dsequence;
-      const Asequence = this.props.Asequence;
+
       const counter = this.props.counter;
       const DNAoriginal = this.props.DNAoriginal;
       const AAoriginal = this.props.AAoriginal;
 
       const generationRepair = this.props.generationRepair;
       const targetSequenceRepair = this.props.targetSequenceRepair;
-
+      console.log(this.props.DsequencePrint);
 
       return (
         <fieldset id="wrapperfsB">
@@ -41,14 +40,14 @@ export default class ContainerBottom extends Component {
                     readOnly = {true}
                     >
                     <b>Mutate</b> <br/>
-                    Original DNA Sequence: {DNAoriginal} <br/>
-                    Mutated DNA Sequence: &nbsp;{Dsequence} <br/>
-                    Original AA Sequence: &nbsp;{AAoriginal} <br/>
-                    Mutated AA Sequence:  &nbsp; {Asequence} <br/>
+                    Original DNA Sequence:{DNAoriginal} <br/>
+                    Mutated DNA Sequence: {this.props.DsequencePrint.map((data, index) => {return data})} <br/>
+                    Original AA Sequence: {AAoriginal} <br/>
+                    Mutated &nbsp;AA Sequence: {this.props.AsequencePrint.map((data, index) => {return data})} <br/>
                     Generation: {counter} &nbsp; DNA Sequence Difference: {DSDiff}% &nbsp; AA Sequence Difference: {ASDiff}% <br/>
                     # of Mutation -> Substitution: {countSub}  Insertion: {countIns} Deletion: {countDel} &nbsp; <br/>
                     Missense: {countMis} Silent: {countSil} Nonsense: {countNon} <br/>
-                    <b>Repair</b> <br />
+                    <b>Repair (Genetic Algorithm)</b> <br />
                     Target DNA Sequence to fix: {targetSequenceRepair} <br/>
                     Repair Generation: {generationRepair} <br/>
 
