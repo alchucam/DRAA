@@ -1,7 +1,6 @@
 
 
 import React, { Component } from "react";
-import ContainerM from './ContainerM';
 import ContainerBottom from './ContainerBottom';
 import Counter, {gDNAsequence, counter, fromRNA, fromDNA} from './Counter';
 import {DNAsequence, RNAsequence, AAsequence} from './Convert';
@@ -80,21 +79,6 @@ export default class Mutate extends Component {
 
       return (
         <div>
-      <ContainerM
-        legendName="DNA"
-        sidenote="Only A, T, C or G"
-        sequence={mDNAsequence}
-        />
-      <ContainerM
-        legendName="RNA"
-        sidenote="Only U, A, G or C"
-        sequence={mRNAsequence}
-        />
-      <ContainerM
-        legendName="AMINO ACID"
-        sidenote="Only the valid three-letters Amino Acids or Stop"
-        sequence={mAAsequence}
-        />
 
       <Counter
         onMExit={() => this.setState({isMutating:false, nameM:"Mutate"})}
@@ -117,21 +101,6 @@ export default class Mutate extends Component {
 
       return (
         <div>
-      <ContainerM
-        legendName="DNA"
-        sidenote="Only A, T, C or G"
-        sequence={mDNAsequence}
-        />
-      <ContainerM
-        legendName="RNA"
-        sidenote="Only U, A, G or C"
-        sequence={mRNAsequence}
-        />
-      <ContainerM
-        legendName="AMINO ACID"
-        sidenote="Only the valid three-letters Amino Acids or Stop"
-        sequence={mAAsequence}
-        />
         <span>
           <legend> Mutate && Repair </legend>
           <ButtonGroup>

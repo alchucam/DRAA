@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { Link } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap';
+import './NavMain.css';
 
 var capital = {
   color: "red",
@@ -21,6 +22,14 @@ export default class NavMain extends Component {
               <LinkContainer exact to='/mutate'>
                 <NavItem>Mutate</NavItem>
               </LinkContainer>
+            </Nav>
+            <Nav>
+              <NavItem href='https://github.com/alchucam/DRAA'>
+                    Github
+              </NavItem>
+              <NavItem href='https://www.alexchu.me'>
+                    Chu
+              </NavItem>
             </Nav>
           </Navbar>
     )

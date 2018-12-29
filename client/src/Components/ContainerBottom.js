@@ -36,15 +36,14 @@ export default class ContainerBottom extends Component {
                     readOnly = {true}
                     >
                     <b>Mutate</b> <br/>
-                    Original DNA Sequence:{DNAoriginal} <br/>
-                    Mutated DNA Sequence: {this.props.DsequencePrint.map((data, index) => {return data})} <br/>
-                    Original RNA Sequence: {RNAoriginal} <br/>
-                    Mutated RNA Sequence: {this.props.RsequencePrint.map((data, index) => {return data})} <br/>
-                    Original AA Sequence: {AAoriginal} <br/>
-                    Mutated &nbsp;AA Sequence: {this.props.AsequencePrint.map((data, index) => {return data})} <br/>
+                    Original DNA Sequence: &nbsp;{DNAoriginal} <br/>
+                    Mutated DNA Sequence: &nbsp;&nbsp;{this.props.DsequencePrint.map((data, index) => {return data})} <br/>
+                    Original RNA Sequence: &nbsp;{RNAoriginal} <br/>
+                    Mutated RNA Sequence:&nbsp;&nbsp; {this.props.RsequencePrint.map((data, index) => {return data})} <br/>
+                    Original AA Sequence:&nbsp;&nbsp; {AAoriginal} <br/>
+                    Mutated &nbsp;AA Sequence: &nbsp;&nbsp;{this.props.AsequencePrint.map((data, index) => {return data})} <br/>
                     Generation: {counter} &nbsp; DNA Sequence Difference: {DSDiff}% &nbsp; AA Sequence Difference: {ASDiff}% <br/>
-                    # of Mutation -> Substitution: {countSub}  Insertion: {countIns} Deletion: {countDel} &nbsp; <br/>
-                    Missense: {countMis} Silent: {countSil} Nonsense: {countNon} <br/>
+                    # of Mutation -> Substitution: {countSub}  Insertion: {countIns} Deletion: {countDel} Missense: {countMis} Silent: {countSil} Nonsense: {countNon} <br/>
                     <b>Repair (Genetic Algorithm)</b> <br />
                     Target DNA Sequence to fix: {targetSequenceRepair} <br/>
                     Repair Generation: {generationRepair} <br/>
