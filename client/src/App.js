@@ -15,19 +15,20 @@ class App extends Component {
   };
 
 
-/*
+
   authenticate(){
     document.getElementById("loading").style.display = "block";
     document.getElementById("root").style.display = "none";
-    return new Promise(resolve => setTimeout(resolve, 3)) //real: 3000
+    return new Promise(resolve => setTimeout(resolve, 3000))
   }
   componentDidMount() {
     this.authenticate().then(()=>{
           document.getElementById("loading").style.display = "none";
           document.getElementById("root").style.display = "block";
+          document.documentElement.style.setProperty('overflow-y', 'scroll');
     })
   }
-  */
+
 
   render() {
     return (
