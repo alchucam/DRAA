@@ -18,19 +18,15 @@ export default class ContainerBottom extends Component {
     };
   }
 
-
-
-
   render() {
-
 
       const counter = this.props.counter;
       const DNAoriginal = this.props.DNAoriginal;
+      const RNAoriginal = this.props.RNAoriginal;
       const AAoriginal = this.props.AAoriginal;
 
       const generationRepair = this.props.generationRepair;
       const targetSequenceRepair = this.props.targetSequenceRepair;
-      console.log(this.props.DsequencePrint);
 
       return (
         <fieldset id="wrapperfsB">
@@ -42,6 +38,8 @@ export default class ContainerBottom extends Component {
                     <b>Mutate</b> <br/>
                     Original DNA Sequence:{DNAoriginal} <br/>
                     Mutated DNA Sequence: {this.props.DsequencePrint.map((data, index) => {return data})} <br/>
+                    Original RNA Sequence: {RNAoriginal} <br/>
+                    Mutated RNA Sequence: {this.props.RsequencePrint.map((data, index) => {return data})} <br/>
                     Original AA Sequence: {AAoriginal} <br/>
                     Mutated &nbsp;AA Sequence: {this.props.AsequencePrint.map((data, index) => {return data})} <br/>
                     Generation: {counter} &nbsp; DNA Sequence Difference: {DSDiff}% &nbsp; AA Sequence Difference: {ASDiff}% <br/>

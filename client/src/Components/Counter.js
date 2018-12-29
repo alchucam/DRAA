@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import {DNAsequence, AAsequence} from './Convert';
+import {DNAsequence, RNAsequence, AAsequence} from './Convert';
 import {geneticCode} from './GeneticCode';
 import ContainerBottom from './ContainerBottom';
 import Buttonn from './Buttonn';
-import {ButtonToolbar} from "react-bootstrap";
+import {ButtonGroup} from "react-bootstrap";
 import {repair, generationR, targetSequence} from './Repair'
 import Chart from './Chart';
 export var gDNAsequence = DNAsequence;
@@ -13,9 +13,10 @@ export var gDNAsequence = DNAsequence;
 var dna = ["A","T","C","G"];
 var type = ["Sub", "Ins", "Del"];
 //for setState
-var tempRNA = '';
+
 var tempcAAsequence = '';
 var tempcDNAsequence = '';
+var tempcRNAsequence = '';
 
 export var counter = 0;
 export var DSDiff = 0; export var ASDiff = 0;
@@ -29,6 +30,7 @@ export var sStart = 0, sEnd = 20;
 
 
 var DSDIFFpos = [];
+var RSDIFFpos = [];
 var ASDIFFposS = [];
 var ASDIFFposE = [];
 
@@ -82,9 +84,11 @@ function mutation(sequence){
 export function getDsDiff(original, sequence){
     var count = 0;
     DSDIFFpos = [];
+    RSDIFFpos = [];
     for (var i = 0; i < original.length; i++){
       if (original[i] !== sequence[i]){
         DSDIFFpos.push(i);
+        RSDIFFpos.push(i);
         count++;
       }
     }
@@ -217,8 +221,10 @@ export default class Counter extends Component {
     this.state = {number: 0,
                   numberList: [0],
                   cDNAsequence: DNAsequence,
+                  cRNAsequence: RNAsequence,
                   cAAsequence:AAsequence,
                   DsequencePrint: [DNAsequence],
+                  RsequencePrint: [RNAsequence],
                   AsequencePrint: [AAsequence],
                   generationRepair: 0,
                   targetSequenceRepair: DNAsequence,
@@ -236,8 +242,8 @@ export default class Counter extends Component {
       if (this.props.isMutating && !this.props.isRepairing){
         // var tempList = [];
         tempcDNAsequence = mutation(this.state.cDNAsequence);
-        tempRNA = fromDNA(tempcDNAsequence);
-        tempcAAsequence = fromRNA(tempRNA);
+        tempcRNAsequence = fromDNA(tempcDNAsequence);
+        tempcAAsequence = fromRNA(tempcRNAsequence);
         DSDiff = getDsDiff(DNAsequence, tempcDNAsequence);
         DSDiff = DSDiff.toFixed(2);
         getInsDel(DNAsequence, tempcDNAsequence);
@@ -248,8 +254,10 @@ export default class Counter extends Component {
         sEnd = this.state.number < 20 ? 20 : this.state.scrollEnd +1;
         this.setState({ number: this.state.number + 1,
                         cDNAsequence: tempcDNAsequence,
+                        cRNAsequence: tempcRNAsequence,
                         cAAsequence: tempcAAsequence,
-                        DsequencePrint: this.pickErrorDNA(tempcDNAsequence),
+                        DsequencePrint: this.pickError(tempcDNAsequence, DNAsequence, DSDIFFpos),
+                        RsequencePrint: this.pickError(tempcRNAsequence, RNAsequence, RSDIFFpos),
                         AsequencePrint: this.pickErrorAA(tempcAAsequence),
                         generationRepair: generationR,
                         targetSequenceRepair: targetSequence,
@@ -276,11 +284,12 @@ export default class Counter extends Component {
         // repair(DNAsequence, this.state.cDNAsequence);
         repair(DNAsequence, this.state.cDNAsequence);
         tempcDNAsequence = mutation(this.state.cDNAsequence);
-        tempRNA = fromDNA(tempcDNAsequence);
+        tempcRNAsequence = fromDNA(tempcDNAsequence);
         // this.state.cAAsequence
-        tempcAAsequence  = fromRNA(tempRNA);
+        tempcAAsequence  = fromRNA(tempcRNAsequence);
         DSDiff = getDsDiff(DNAsequence, tempcDNAsequence);
         DSDiff = DSDiff.toFixed(2);
+        RSDIFFpos = DSDIFFpos;
         getInsDel(DNAsequence, tempcDNAsequence);
         getAsDiff(AAsequence, tempcAAsequence, DNAsequence, tempcDNAsequence);
         listSub.push(countSub); listIns.push(countIns); listDel.push(countDel);
@@ -290,8 +299,10 @@ export default class Counter extends Component {
         sEnd = this.state.number < 20 ? 20 : this.state.scrollEnd;
         this.setState({ number: this.state.number + 1,
                         cDNAsequence: tempcDNAsequence,
+                        cRNAsequence: tempcRNAsequence,
                         cAAsequence: tempcAAsequence,
-                        DsequencePrint: this.pickErrorDNA(tempcDNAsequence),
+                        DsequencePrint: this.pickError(tempcDNAsequence, DNAsequence, DSDIFFpos),
+                        RsequencePrint: this.pickError(tempcRNAsequence, RNAsequence, RSDIFFpos),
                         AsequencePrint: this.pickErrorAA(tempcAAsequence),
                         generationRepair: generationR,
                         targetSequenceRepair: targetSequence,
@@ -315,37 +326,37 @@ export default class Counter extends Component {
     // Typical usage (don't forget to compare props):
     if (this.state.cDNAsequence !== prevProps.mDNAsequence) {
       gDNAsequence = this.state.cDNAsequence;
-
       this.props.onCounter();
       // console.log(this.state.number);
      }
   }
 
-  pickErrorDNA = (Dsequence) =>{
+  pickError = (sequence, originalSequence, pos) =>{
     var errorLine = [];
     var keyN = 0;
-    for (var i = 0; i < Dsequence.length; i++){
-      if (DSDIFFpos !== undefined && DSDIFFpos.length !== 0){
-        if (DSDIFFpos[0] === i){
-          errorLine.push(<span key={keyN} style={capital}>{Dsequence[i]}</span>);
-          DSDIFFpos.shift();
+    console.log(pos);
+    for (var i = 0; i < sequence.length; i++){
+      if (pos !== undefined && pos.length !== 0){
+        if (pos[0] === i){
+          errorLine.push(<span key={keyN} style={capital}>{sequence[i]}</span>);
+          pos.shift();
           keyN++;
         }
         else{
-          errorLine.push(Dsequence[i]);
+          errorLine.push(sequence[i]);
         }
       }
       else {
-        if (Dsequence.length <= DNAsequence.length){
-          errorLine.push(Dsequence.substring(i));
+        if (sequence.length <= originalSequence.length){
+          errorLine.push(sequence.substring(i));
         }
-        else if (i <= DNAsequence.length){
-          errorLine.push(Dsequence.substring(i,DNAsequence.length));
-          errorLine.push(<span key={keyN} style={capital}>{Dsequence.substring(DNAsequence.length)}</span>);
+        else if (i <= originalSequence.length){
+          errorLine.push(sequence.substring(i,originalSequence.length));
+          errorLine.push(<span key={keyN} style={capital}>{sequence.substring(originalSequence.length)}</span>);
           keyN++;
         }
         else {
-          errorLine.push(<span key={keyN} style={capital}>{Dsequence.substring(DNAsequence.length)}</span>);
+          errorLine.push(<span key={keyN} style={capital}>{sequence.substring(originalSequence.length)}</span>);
           keyN++;
         }
         break;
@@ -401,6 +412,7 @@ export default class Counter extends Component {
     var nameM = this.props.nameM;
     var nameR = this.props.nameR;
     var DsequencePrint = this.state.DsequencePrint;
+    var RsequencePrint = this.state.RsequencePrint;
     var AsequencePrint = this.state.AsequencePrint;
 
 
@@ -409,7 +421,7 @@ export default class Counter extends Component {
       return (
           <span>
             <legend> Mutate && Repair </legend>
-            <ButtonToolbar>
+            <ButtonGroup>
               <Buttonn
                     pressed={isMutating}
                     onButtonChange={this.props.onMExit}
@@ -418,7 +430,7 @@ export default class Counter extends Component {
                     pressed={isRepairing}
                     onButtonChange={this.props.onREnter}
                     name = {nameR}/>
-            </ButtonToolbar>
+            </ButtonGroup>
             <br/>
             <Chart
               number = {this.state.number}
@@ -429,11 +441,13 @@ export default class Counter extends Component {
               />
           <ContainerBottom
             DsequencePrint={DsequencePrint}
+            RsequencePrint={RsequencePrint}
             AsequencePrint={AsequencePrint}
             isMutating={isMutating}
             isRepairing={isRepairing}
             counter={this.state.number}
             DNAoriginal={DNAsequence}
+            RNAoriginal={RNAsequence}
             AAoriginal={AAsequence}
             generationRepair = {generationR}
             targetSequenceRepair = {targetSequence}
@@ -445,7 +459,7 @@ export default class Counter extends Component {
       return (
           <span>
             <legend> Mutate && Repair </legend>
-            <ButtonToolbar>
+            <ButtonGroup>
               <Buttonn
                     pressed={isMutating}
                     onButtonChange={this.props.onMEnter}
@@ -454,7 +468,7 @@ export default class Counter extends Component {
                     pressed={isRepairing}
                     onButtonChange={this.props.onRExit}
                     name = {nameR}/>
-            </ButtonToolbar>
+            </ButtonGroup>
             <br/>
             <Chart
               number = {this.state.number}
@@ -465,11 +479,13 @@ export default class Counter extends Component {
               />
           <ContainerBottom
             DsequencePrint={DsequencePrint}
+            RsequencePrint={RsequencePrint}
             AsequencePrint={AsequencePrint}
             isMutating={isMutating}
             isRepairing={isRepairing}
             counter={this.state.number}
             DNAoriginal={DNAsequence}
+            RNAoriginal={RNAsequence}
             AAoriginal={AAsequence}
             generationRepair = {generationR}
             targetSequenceRepair = {targetSequence}
@@ -481,7 +497,7 @@ export default class Counter extends Component {
       return (
           <span>
             <legend> Mutate && Repair </legend>
-            <ButtonToolbar>
+            <ButtonGroup>
               <Buttonn
                     pressed={isMutating}
                     onButtonChange={this.props.onMExit}
@@ -490,7 +506,7 @@ export default class Counter extends Component {
                     pressed={isRepairing}
                     onButtonChange={this.props.onRExit}
                     name = {nameR}/>
-            </ButtonToolbar>
+            </ButtonGroup>
             <br/>
             <Chart
               number = {this.state.number}
@@ -501,11 +517,13 @@ export default class Counter extends Component {
               />
           <ContainerBottom
             DsequencePrint={DsequencePrint}
+            RsequencePrint={RsequencePrint}
             AsequencePrint={AsequencePrint}
             isMutating={isMutating}
             isRepairing={isRepairing}
             counter={this.state.number}
             DNAoriginal={DNAsequence}
+            RNAoriginal={RNAsequence}
             AAoriginal={AAsequence}
             generationRepair = {generationR}
             targetSequenceRepair = {targetSequence}

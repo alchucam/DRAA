@@ -6,7 +6,7 @@ import ContainerBottom from './ContainerBottom';
 import Counter, {gDNAsequence, counter, fromRNA, fromDNA} from './Counter';
 import {DNAsequence, RNAsequence, AAsequence} from './Convert';
 import Buttonn from './Buttonn';
-import {ButtonToolbar} from "react-bootstrap";
+import { ButtonGroup} from "react-bootstrap";
 import Chart from './Chart';
 import {generationR} from './Repair';
 
@@ -82,17 +82,17 @@ export default class Mutate extends Component {
         <div>
       <ContainerM
         legendName="DNA"
-        sidenote="Only A, T, C or G will be inputted"
+        sidenote="Only A, T, C or G"
         sequence={mDNAsequence}
         />
       <ContainerM
         legendName="RNA"
-        sidenote="Only U, A, G or C will be inputted"
+        sidenote="Only U, A, G or C"
         sequence={mRNAsequence}
         />
       <ContainerM
         legendName="AMINO ACID"
-        sidenote="Only the valid three-letters Amino Acids or Stop will be inputted"
+        sidenote="Only the valid three-letters Amino Acids or Stop"
         sequence={mAAsequence}
         />
 
@@ -119,22 +119,22 @@ export default class Mutate extends Component {
         <div>
       <ContainerM
         legendName="DNA"
-        sidenote="Only A, T, C or G will be inputted"
+        sidenote="Only A, T, C or G"
         sequence={mDNAsequence}
         />
       <ContainerM
         legendName="RNA"
-        sidenote="Only U, A, G or C will be inputted"
+        sidenote="Only U, A, G or C"
         sequence={mRNAsequence}
         />
       <ContainerM
         legendName="AMINO ACID"
-        sidenote="Only the valid three-letters Amino Acids or Stop will be inputted"
+        sidenote="Only the valid three-letters Amino Acids or Stop"
         sequence={mAAsequence}
         />
         <span>
           <legend> Mutate && Repair </legend>
-          <ButtonToolbar>
+          <ButtonGroup>
             <Buttonn
                   pressed={isMutating}
                   name = {nameM}
@@ -145,17 +145,19 @@ export default class Mutate extends Component {
                   name = {nameR}
                   onButtonChange={this.handleRepair}
                   />
-          </ButtonToolbar>
+          </ButtonGroup>
           <br/>
           <Chart/>
           <br/>
           <ContainerBottom
             DsequencePrint={[DNAsequence]}
+            RsequencePrint={[RNAsequence]}
             AsequencePrint={[AAsequence]}
             isMutating={isMutating}
             isRepairing={isRepairing}
             counter = {counter}
             DNAoriginal = {DNAsequence}
+            RNAoriginal = {RNAsequence}
             AAoriginal = {AAsequence}
             generationRepair = {generationR}
             targetSequenceRepair = {DNAsequence}

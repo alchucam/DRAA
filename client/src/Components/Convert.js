@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 import Container from './Container';
-import {Button, ButtonToolbar} from "react-bootstrap"
+import {Button, ButtonGroup, DropdownButton, MenuItem} from "react-bootstrap"
 import {geneticCode} from './GeneticCode';
 import './Convert.css'
 
@@ -317,7 +317,7 @@ export default class Convert extends Component {
   render() {
     const legendName = this.state.legendName;
     const sequence = this.state.sequence;
-
+    const bottomBuffer = {height:'200px'};
     DNAsequence = this.state.DNAsequence;
     RNAsequence = this.state.RNAsequence;
     AAsequence = this.state.AAsequence;
@@ -338,46 +338,51 @@ export default class Convert extends Component {
 
     }
 
-
-
       return (
         <div id="containerwrapper">
-
         <Container
+          fieldsetID="fieldDNA1"
+          legendID="legendDNA1"
+          textareaID="textDNA1"
           legendName="DNA"
-          sidenote="Only A, T, C or G will be inputted"
+          sidenote="Only A, T, C or G"
           sequence={DNAsequence}
           onSequenceChange={this.handleDNAChange}/>
         <Container
+          fieldsetID="fieldRNA1"
+          legendID="legendRNA1"
+          textareaID="textRNA1"
           legendName="RNA"
-          sidenote="Only U, A, G or C will be inputted"
+          sidenote="Only U, A, G or C"
           sequence={RNAsequence}
           onSequenceChange={this.handleRNAChange}/>
         <Container
+          fieldsetID="fieldAA1"
+          legendID="legendAA1"
+          textareaID="textAA1"
           legendName="AMINO ACID"
-          sidenote="Only the valid three-letters Amino Acids or Stop will be inputted"
+          sidenote="Only the valid three-letters Amino Acids or Stop"
           sequence={AAsequence}
           onSequenceChange={this.handleAAChange}/>
         <span>
           <legend> Database </legend>
-          <ButtonToolbar>
+          <ButtonGroup>
             <Button
                   onClick={this.handleSubmit}
                   >
                   {"Save"}
-                  </Button>
-            <Button
-                  onClick={this.handleLoad}
-                  >
-                  {"Load"}
-                  </Button>
-          </ButtonToolbar>
+            </Button>
+            <DropdownButton id="dropdown" title="Load"  onClick={this.handleLoad}>
+              {this.state.loadData.map((data, index) => (
+                <MenuItem key={index} onClick={() => this.handleExchange(data)}>{index}:  {data ? (data.length > 20 ? data.substring(0, 20)+'...' : data) : data }</MenuItem>
+              ))}
+            </DropdownButton>
+          </ButtonGroup>
           <br/>
-          {this.state.loadData.map((data, index) => (
-            <h1 key={index} onClick={() => this.handleExchange(data)}>{index}: {data}</h1>
-          ))}
         </span>
+        <div style={bottomBuffer}></div>
       </div>
+
       );
   }
 }

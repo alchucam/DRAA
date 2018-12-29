@@ -19,3 +19,7 @@ body {
 code {
   font-family: 'TravelingTypeWriterFont';
 }
+
+html {
+  overflow-y: scroll;
+}
