@@ -12,6 +12,13 @@ nodemon server.js
 node server.js
 ```
 
+## heroku environment
+add "start":"node server.js" under scripts in server/package.json
+```
+heroku create
+git push heroku master
+```
+
 
 ##What was done: (Self Note)
 ### Server side (Node.js)
