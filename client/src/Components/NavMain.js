@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { Link } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap';
-import './NavMain.css';
 
 var capital = {
   color: "red",

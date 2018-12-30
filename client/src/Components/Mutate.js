@@ -1,5 +1,3 @@
-
-
 import React, { Component } from "react";
 import ContainerBottom from './ContainerBottom';
 import Counter, {gDNAsequence, counter, fromRNA, fromDNA} from './Counter';
@@ -8,10 +6,6 @@ import Buttonn from './Buttonn';
 import { ButtonGroup} from "react-bootstrap";
 import Chart from './Chart';
 import {generationR} from './Repair';
-
-
-
-
 
 export default class Mutate extends Component {
   constructor(props){
@@ -31,10 +25,10 @@ export default class Mutate extends Component {
                 };
   }
 
+  //handle event when user press mutate button
   //makes the parameter as a string. convert manually to boolean!!
   handleMutate(isMutating, nameM){
       //technically, it will always be false when handled. but for safe-box purpose.
-
       if (isMutating === "false"){
         isMutating = true;
         nameM = "Stop";
@@ -42,11 +36,11 @@ export default class Mutate extends Component {
       }
       else{
         isMutating = false;
-
           this.setState({isMutating, nameM});
       }
   }
 
+  //handle event when user press repair button
   handleRepair(isRepairing, nameR){
     //technically, it will always be false when handled. but for safe-box purpose.
     if (isRepairing === "false"){
@@ -61,25 +55,25 @@ export default class Mutate extends Component {
   }
 
 
-
-
   render() {
+    //sequences to hold the ongoing changed/mutated sequences
     var mDNAsequence = this.state.mDNAsequence;
     var mRNAsequence = this.state.mRNAsequence;
     var mAAsequence =  this.state.mAAsequence;
+    //boolean for checking if user has clicked mutate and/or repair buttons.
     const isMutating = this.state.isMutating;
     const isRepairing = this.state.isRepairing;
+    //name for the buttons. Mutate<->Stop. Repair<->Stop. depends on whether user has clicked the button.
     var nameM = this.state.nameM;
     var nameR = this.state.nameR;
+    //conversion of sequence between DNA,RNA and AA.
     mRNAsequence = fromDNA(mDNAsequence);
     mAAsequence = fromRNA(mRNAsequence);
-    // listSub, listIns, listDel, listMis, listSil, listNon,
 
+    //case: user has clicked mutate or repair button
     if (isMutating || isRepairing){
-
       return (
         <div>
-
       <Counter
         onMExit={() => this.setState({isMutating:false, nameM:"Mutate"})}
         onRExit={() => this.setState({isRepairing:false, nameR:"Repair"})}
@@ -97,8 +91,9 @@ export default class Mutate extends Component {
       </div>
     )
   }
-    else if (!isMutating && !isRepairing){ //base
-
+    //case: user hasn't clicked mutate and repair button
+    //the initial state of the mutate page.
+    else if (!isMutating && !isRepairing){
       return (
         <div>
         <span>
@@ -133,8 +128,7 @@ export default class Mutate extends Component {
           />
         </span>
       </div>
-    )
+      )
     }
-
   }
 }

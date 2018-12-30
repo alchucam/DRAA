@@ -1,9 +1,5 @@
-//oninput instead of onchange
-
 import React, { Component } from "react";
 import './Container.css';
-
-
 
 export default class Container extends Component {
   constructor(props) {
@@ -13,8 +9,8 @@ export default class Container extends Component {
     this.state = {legendClick:false, visibility: "visible", height: "100%"};
   }
 
-
-
+  //handle event when a sequence in the text area has been modified, calling onSequenceChange in Convert.js
+  //additionally, maintains the caret position.
   handleChange(event, legendName) {
     //to preserve the caret position
     const caret = event.target.selectionStart
@@ -26,6 +22,7 @@ export default class Container extends Component {
     this.props.onSequenceChange(event.target.value);
   }
 
+  //handle event when user clicks the legend, which hides or show the textarea below the legend.
   handleLegend(){
     if (this.state.legendClick){
       this.setState({legendClick:false, visibility:"visible", height: "100%"})

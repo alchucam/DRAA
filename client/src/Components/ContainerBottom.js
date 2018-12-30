@@ -1,15 +1,8 @@
-//oninput instead of onchange
-
 import React, { Component } from "react";
 import './ContainerBottom.css';
 import { DSDiff, ASDiff, countSub, countNon, countMis, countSil, countIns, countDel } from './Counter.js'
 
-
-
-
-
-
-
+//container class in the mutate page.
 export default class ContainerBottom extends Component {
   constructor(props) {
     super(props);
@@ -19,18 +12,15 @@ export default class ContainerBottom extends Component {
   }
 
   render() {
-
       const counter = this.props.counter;
       const DNAoriginal = this.props.DNAoriginal;
       const RNAoriginal = this.props.RNAoriginal;
       const AAoriginal = this.props.AAoriginal;
-
       const generationRepair = this.props.generationRepair;
       const targetSequenceRepair = this.props.targetSequenceRepair;
 
       return (
-        <fieldset id="wrapperfsB">
-
+        <fieldset>
           <div id="textareaB"
                     spellCheck="false"
                     readOnly = {true}

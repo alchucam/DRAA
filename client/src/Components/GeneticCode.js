@@ -1,5 +1,5 @@
 
-
+//array to hold genetic code conversion between RNA and amino acids
 export var geneticCode = [
     {AA: "Phe", RNA: "UUU"},
     {AA: "Phe", RNA: "UUC"},

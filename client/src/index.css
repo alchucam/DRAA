@@ -1,3 +1,10 @@
+* {
+  outline:none;
+	border:none;
+	margin:0px;
+	padding:0px;
+}
+
 /** Font **/
 @font-face {
   font-family: 'TravelingTypeWriterFont';
@@ -7,9 +14,11 @@
        url(./fonts/TravelingTypewriter.ttf) format('truetype');
 }
 
-
 body {
-  margin: 0;
+  background:#fff //url(https://static.tumblr.com/maopbtg/a5emgtoju/inflicted.png) repeat;
+  margin-left:1%;
+  margin-right:1%;
+
   padding: 0;
   font-family: 'TravelingTypeWriterFont';
   -webkit-font-smoothing: antialiased;

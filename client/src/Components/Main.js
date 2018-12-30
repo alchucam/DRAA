@@ -7,7 +7,6 @@ export default class Main extends Component {
 
   render() {
     return (
-
       <Switch>
         <Route exact path='/' component={Convert}/>
         <Route path='/mutate' component={Mutate}/>

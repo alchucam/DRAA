@@ -8,26 +8,18 @@ import {repair, generationR, targetSequence} from './Repair'
 import Chart from './Chart';
 export var gDNAsequence = DNAsequence;
 
-
-
 var dna = ["A","T","C","G"];
 var type = ["Sub", "Ins", "Del"];
-//for setState
 
 var tempcAAsequence = '';
 var tempcDNAsequence = '';
 var tempcRNAsequence = '';
 
+//variable information for ContainerBottom
 export var counter = 0;
-export var DSDiff = 0; export var ASDiff = 0;
+export var DSDiff = 0; export var ASDiff = 0; //display difference
 export var countSub = 0; export var countIns = 0; export var countDel = 0;
 export var countMis = 0; export var countSil = 0; export var countNon = 0;
-
-export var listSub = [], listIns = [], listDel = [];
-export var listMis = [], listSil = [], listNon = [];
-
-export var sStart = 0, sEnd = 20;
-
 
 var DSDIFFpos = [];
 var RSDIFFpos = [];
@@ -38,19 +30,19 @@ var capital = {
   color: "red",
 };
 
-
+//generic function to replace a character at the index of the string
 export function replaceAt(string, index, replace) {
   return string.substring(0, index) + replace + string.substring(index + 1);
 }
 
+//generic function to insert a character in the string
 function insertion(string, index, insert){
   return string.substring(0, index) + insert + string.substring(index);
 }
 
-
-
 //one in 30 million nucleotides each generation
 //= 3.33e-8
+//Currently, it is set to 1 generation has 0.03% chance of mutate rate per DNA sequence character
 function mutation(sequence){
   for (var i = 0; i < sequence.length; i++){
     var random = Math.random();
@@ -78,9 +70,7 @@ function mutation(sequence){
   return sequence;
 }
 
-
-
-
+//obtain the number and position of difference between original and mutated DNA sequence
 export function getDsDiff(original, sequence){
     var count = 0;
     DSDIFFpos = [];
@@ -96,6 +86,7 @@ export function getDsDiff(original, sequence){
     return (count/(original.length)*100);
 }
 
+//obtain the number and position of difference between original and mutated AA sequence
 function getAsDiff(original, sequence, DNAoriginal, DNAsequence){
     var count = 0;
     var numAA = 0;
@@ -162,6 +153,7 @@ function getAsDiff(original, sequence, DNAoriginal, DNAsequence){
     ASDiff = ((count/numAA)*100).toFixed(2);
 }
 
+//obtain count of Insertion and Deletion in the mutation
 function getInsDel(original, sequence){
   countIns = 0;
   countDel = 0;
@@ -173,10 +165,12 @@ function getInsDel(original, sequence){
   }
 }
 
+//find the corresponding RNA<->AA codon from genetic Code.
 function reduceGenCode(sequence, start, end){
   return geneticCode.reduce(function (codon, geneticCode){ return (codon.RNA === sequence.substring(start, end)) ? codon : geneticCode;},{});
 }
 
+//convert sequence from DNA to RNA
 export function fromDNA(sequence){
   for (var i = 0; i < sequence.length; i++){
       if (sequence.charAt(i) === 'A'){
@@ -195,13 +189,12 @@ export function fromDNA(sequence){
   return sequence;
 }
 
+//convert sequence from RNA to AA.
 export function fromRNA(sequence){
     var start = 0;
     var end = start+3;
     while (end <= sequence.length){
       var sub = reduceGenCode(sequence, start, end);
-      // var sub = geneticCode.reduce(function (codon, geneticCode){
-      //   return (codon.RNA === sequence.substring(start, end)) ? codon : geneticCode;},{});
       sequence = sequence.replace(sequence.substring(start,end), sub.AA);
       if (sub.AA === 'Stop'){
         start = start+4;
@@ -219,7 +212,6 @@ export default class Counter extends Component {
   constructor(props) {
     super(props);
     this.state = {number: 0,
-                  numberList: [0],
                   cDNAsequence: DNAsequence,
                   cRNAsequence: RNAsequence,
                   cAAsequence:AAsequence,
@@ -231,16 +223,19 @@ export default class Counter extends Component {
                   scrollStart: 0, scrollEnd: 20,
                   sub: [0], ins: [0], del: [0], mis: [0], sil: [0], non: [0],
                   };
-                  }
+    }
 
   componentDidMount() {
-    listSub = []; listIns = []; listDel = [];
-    listMis = []; listSil = []; listNon = [];
-    sStart = 0; sEnd = 0;
+    //for every 1 second, if mutate button is pressed, mutate the sequence based on the chance by mutation function,
+    //update the sequences accordingly, and update the chart as well.
+    //if repair button is pressed additionally, call repair function to perform genetic algorithm
+    //to figure out how many generation it takes to repair the mutated sequence to original sequence.
     this.interval = setInterval(() => {
-
-      if (this.props.isMutating && !this.props.isRepairing){
-        // var tempList = [];
+      if (this.props.isRepairing){
+        repair(DNAsequence, this.state.cDNAsequence);
+        this.props.onRExit();
+      }
+      if (this.props.isMutating){
         tempcDNAsequence = mutation(this.state.cDNAsequence);
         tempcRNAsequence = fromDNA(tempcDNAsequence);
         tempcAAsequence = fromRNA(tempcRNAsequence);
@@ -248,10 +243,6 @@ export default class Counter extends Component {
         DSDiff = DSDiff.toFixed(2);
         getInsDel(DNAsequence, tempcDNAsequence);
         getAsDiff(AAsequence, tempcAAsequence, DNAsequence, tempcDNAsequence);
-        listSub.push(countSub); listIns.push(countIns); listDel.push(countDel);
-        listMis.push(countMis); listSil.push(countSil); listNon.push(countNon);
-        sStart = this.state.number < 20 ? 0 : this.state.scrollStart +1;
-        sEnd = this.state.number < 20 ? 20 : this.state.scrollEnd +1;
         this.setState({ number: this.state.number + 1,
                         cDNAsequence: tempcDNAsequence,
                         cRNAsequence: tempcRNAsequence,
@@ -267,74 +258,25 @@ export default class Counter extends Component {
                         mis: this.state.mis.concat(countMis), sil: this.state.sil.concat(countSil), non: this.state.non.concat(countNon),
                       });
       }
-      else if (this.props.isRepairing && !this.props.isMutating){
-        // repair(DNAsequence, this.state.cDNAsequence);
-        repair(DNAsequence, this.state.cDNAsequence);
-        this.props.onRExit();
-        sStart = this.state.number < 20 ? 0 : this.state.scrollStart;
-        sEnd = this.state.number < 20 ? 20 : this.state.scrollEnd ;
-        this.setState({
-                        scrollStart: this.state.number < 20 ? 0 : this.state.scrollStart + 1,
-                        scrollEnd: this.state.number < 20 ? 20 : this.state.scrollEnd + 1,
-                        sub: this.state.sub.concat(countSub), ins: this.state.ins.concat(countIns), del: this.state.del.concat(countDel),
-                        mis: this.state.mis.concat(countMis), sil: this.state.sil.concat(countSil), non: this.state.non.concat(countNon),
-                      });
-      }
-      else if (this.props.isMutating && this.props.isRepairing){
-        // repair(DNAsequence, this.state.cDNAsequence);
-        repair(DNAsequence, this.state.cDNAsequence);
-        tempcDNAsequence = mutation(this.state.cDNAsequence);
-        tempcRNAsequence = fromDNA(tempcDNAsequence);
-        // this.state.cAAsequence
-        tempcAAsequence  = fromRNA(tempcRNAsequence);
-        DSDiff = getDsDiff(DNAsequence, tempcDNAsequence);
-        DSDiff = DSDiff.toFixed(2);
-        RSDIFFpos = DSDIFFpos;
-        getInsDel(DNAsequence, tempcDNAsequence);
-        getAsDiff(AAsequence, tempcAAsequence, DNAsequence, tempcDNAsequence);
-        listSub.push(countSub); listIns.push(countIns); listDel.push(countDel);
-        listMis.push(countMis); listSil.push(countSil); listNon.push(countNon);
-        this.props.onRExit();
-        sStart = this.state.number < 20 ? 0 : this.state.scrollStart;
-        sEnd = this.state.number < 20 ? 20 : this.state.scrollEnd;
-        this.setState({ number: this.state.number + 1,
-                        cDNAsequence: tempcDNAsequence,
-                        cRNAsequence: tempcRNAsequence,
-                        cAAsequence: tempcAAsequence,
-                        DsequencePrint: this.pickError(tempcDNAsequence, DNAsequence, DSDIFFpos),
-                        RsequencePrint: this.pickError(tempcRNAsequence, RNAsequence, RSDIFFpos),
-                        AsequencePrint: this.pickErrorAA(tempcAAsequence),
-                        generationRepair: generationR,
-                        targetSequenceRepair: targetSequence,
-                        scrollStart: this.state.number < 20 ? 0 : this.state.scrollStart + 1,
-                        scrollEnd: this.state.number < 20 ? 20 : this.state.scrollEnd + 1,
-                        sub: this.state.sub.concat(countSub), ins: this.state.ins.concat(countIns), del: this.state.del.concat(countDel),
-                        mis: this.state.mis.concat(countMis), sil: this.state.sil.concat(countSil), non: this.state.non.concat(countNon),
-                      });
-      }
-
     }, 1000);
   }
-
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
+  //used to update state of upper layer (Mutate.js) when state of lower layer (Counter.js) has been updated.
   componentDidUpdate(prevProps) {
-
-    // Typical usage (don't forget to compare props):
     if (this.state.cDNAsequence !== prevProps.mDNAsequence) {
       gDNAsequence = this.state.cDNAsequence;
       this.props.onCounter();
-      // console.log(this.state.number);
      }
   }
 
+  //pick out the difference in the mutated sequence from the DNA or RNA originalSequence, add red color to those characters.
   pickError = (sequence, originalSequence, pos) =>{
     var errorLine = [];
     var keyN = 0;
-    console.log(pos);
     for (var i = 0; i < sequence.length; i++){
       if (pos !== undefined && pos.length !== 0){
         if (pos[0] === i){
@@ -365,6 +307,7 @@ export default class Counter extends Component {
     return errorLine
   }
 
+  //pick out the difference in the mutated sequence from the AA originalSequence, add red color to those characters.
   pickErrorAA = (Asequence) =>{
     var errorLine = [];
     var i = 0;
@@ -402,7 +345,6 @@ export default class Counter extends Component {
         break;
       }
     }
-    // console.log(errorLine);
     return errorLine;
   }
 
@@ -415,96 +357,37 @@ export default class Counter extends Component {
     var RsequencePrint = this.state.RsequencePrint;
     var AsequencePrint = this.state.AsequencePrint;
 
+    //button state depends on the pressed.
+    var mButtonChangeState;
+    var rButtonChangeState;
 
-
+    //if only mutate button is pressed
     if (isMutating && !isRepairing){
-      return (
-          <span>
-            <legend> Mutate && Repair </legend>
-            <ButtonGroup>
-              <Buttonn
-                    pressed={isMutating}
-                    onButtonChange={this.props.onMExit}
-                    name = {nameM}/>
-              <Buttonn
-                    pressed={isRepairing}
-                    onButtonChange={this.props.onREnter}
-                    name = {nameR}/>
-            </ButtonGroup>
-            <br/>
-            <Chart
-              number = {this.state.number}
-              scrollStart = {this.state.scrollStart}
-              scrollEnd = {this.state.scrollEnd}
-              sub = {this.state.sub} ins = {this.state.ins} del = {this.state.del}
-              mis = {this.state.mis} sil = {this.state.sil} non = {this.state.non}
-              />
-          <ContainerBottom
-            DsequencePrint={DsequencePrint}
-            RsequencePrint={RsequencePrint}
-            AsequencePrint={AsequencePrint}
-            isMutating={isMutating}
-            isRepairing={isRepairing}
-            counter={this.state.number}
-            DNAoriginal={DNAsequence}
-            RNAoriginal={RNAsequence}
-            AAoriginal={AAsequence}
-            generationRepair = {generationR}
-            targetSequenceRepair = {targetSequence}
-          />
-        </span>
-      )
+      mButtonChangeState = this.props.onMExit;
+      rButtonChangeState = this.props.onREnter;
     }
+    //if only repair button is pressed
     else if (isRepairing && !isMutating){
-      return (
-          <span>
-            <legend> Mutate && Repair </legend>
-            <ButtonGroup>
-              <Buttonn
-                    pressed={isMutating}
-                    onButtonChange={this.props.onMEnter}
-                    name = {nameM}/>
-              <Buttonn
-                    pressed={isRepairing}
-                    onButtonChange={this.props.onRExit}
-                    name = {nameR}/>
-            </ButtonGroup>
-            <br/>
-            <Chart
-              number = {this.state.number}
-              scrollStart = {this.state.scrollStart}
-              scrollEnd = {this.state.scrollEnd}
-              sub = {this.state.sub} ins = {this.state.ins} del = {this.state.del}
-              mis = {this.state.mis} sil = {this.state.sil} non = {this.state.non}
-              />
-          <ContainerBottom
-            DsequencePrint={DsequencePrint}
-            RsequencePrint={RsequencePrint}
-            AsequencePrint={AsequencePrint}
-            isMutating={isMutating}
-            isRepairing={isRepairing}
-            counter={this.state.number}
-            DNAoriginal={DNAsequence}
-            RNAoriginal={RNAsequence}
-            AAoriginal={AAsequence}
-            generationRepair = {generationR}
-            targetSequenceRepair = {targetSequence}
-          />
-        </span>
-      )
+      mButtonChangeState = this.props.onMEnter;
+      rButtonChangeState = this.props.onRExit;
     }
+    //if both mutate and repair button is pressed
     else {
+      mButtonChangeState = this.props.onMExit;
+      rButtonChangeState = this.props.onRExit;
+    }
+
       return (
           <span>
             <legend> Mutate && Repair </legend>
             <ButtonGroup>
               <Buttonn
                     pressed={isMutating}
-                    onButtonChange={this.props.onMExit}
+                    onButtonChange={mButtonChangeState}
                     name = {nameM}/>
               <Buttonn
                     pressed={isRepairing}
-                    onButtonChange={this.props.onRExit}
+                    onButtonChange={rButtonChangeState}
                     name = {nameR}/>
             </ButtonGroup>
             <br/>
@@ -515,22 +398,21 @@ export default class Counter extends Component {
               sub = {this.state.sub} ins = {this.state.ins} del = {this.state.del}
               mis = {this.state.mis} sil = {this.state.sil} non = {this.state.non}
               />
-          <ContainerBottom
-            DsequencePrint={DsequencePrint}
-            RsequencePrint={RsequencePrint}
-            AsequencePrint={AsequencePrint}
-            isMutating={isMutating}
-            isRepairing={isRepairing}
-            counter={this.state.number}
-            DNAoriginal={DNAsequence}
-            RNAoriginal={RNAsequence}
-            AAoriginal={AAsequence}
-            generationRepair = {generationR}
-            targetSequenceRepair = {targetSequence}
-          />
-        </span>
+            <ContainerBottom
+              DsequencePrint={DsequencePrint}
+              RsequencePrint={RsequencePrint}
+              AsequencePrint={AsequencePrint}
+              isMutating={isMutating}
+              isRepairing={isRepairing}
+              counter={this.state.number}
+              DNAoriginal={DNAsequence}
+              RNAoriginal={RNAsequence}
+              AAoriginal={AAsequence}
+              generationRepair = {generationR}
+              targetSequenceRepair = {targetSequence}
+            />
+          </span>
       )
-    }
 
   }
 }

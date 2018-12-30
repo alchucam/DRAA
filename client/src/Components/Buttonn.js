@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {Button} from "react-bootstrap"
 
+//Button class to handle
 export default class Buttonn extends Component {
   constructor(props){
     super(props);

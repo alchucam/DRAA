@@ -1,6 +1,5 @@
 const express = require('express');
 const mysql = require('mysql');
-
 const app = express();
 const bodyParser = require('body-parser');
 const port = process.env.PORT || 5000;
@@ -24,24 +23,18 @@ app.use(bodyParser.json());
 app.post('/', function(req,res){
   // Get sent data.
   var data = req.body;
-  // var data =datatemp;
+
   //[[a,b,c]] will be flat down to (a,b,c)
   var values = [];
   values.push([data[0].DNAsequence, data[0].RNAsequence, data[0].AAsequence]);
 
   // Perform a MySQL query.
-
-  // con.query('SELECT DNAsequence, COUNT(DNAsequence) FROM draatb GROUP BY DNAsequence HAVING COUNT(DNAsequence) > 1 INTO @dup;');
-  // con.query('SELECT MAX(id) FROM draatb INTO @last;');
-  // con.query('DELETE FROM draatb WHERE DNAsequence = @last;');
-
-
   //keep the latest 5 queries, and delete the rest.
-  // con.query('SELECT MIN(id) FROM draatb ORDER BY id DESC LIMIT 5 INTO @latest;');
-  // con.query('DELETE FROM draatb WHERE id < @latest;');
   con.query('DELETE FROM draatb WHERE id NOT IN (SELECT * FROM (SELECT id FROM draatb ORDER BY id DESC LIMIT 5) AS t1);');
   //insert the data
   con.query('INSERT INTO draatb (DNAsequence, RNAsequence, AAsequence) VALUES ?', [values], function(err, result){
+    if (err) throw err;
+    console.log(result);
   });
 
   //check the duplicates, delete the duplicates
@@ -51,11 +44,11 @@ app.post('/', function(req,res){
   res.end('Success');
 });
 
+//listen to GET requests to /get
 app.get('/get', function(req,res){
   con.query('SELECT * FROM draatb ORDER BY id DESC LIMIT 5', (err, result) => {
     if (err) {
       console.log(err);
-      res.json({"error": true});
     }
     else {
       console.log(result);

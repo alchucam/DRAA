@@ -1,10 +1,8 @@
-//oninput instead of onchange
-
 import React, { Component } from "react";
 import Container from './Container';
 import {Button, ButtonGroup, DropdownButton, MenuItem} from "react-bootstrap"
 import {geneticCode} from './GeneticCode';
-import './Convert.css'
+
 
 var aa = ["Ala", "Arg", "Asn", "Asp", "Cys", "Glu", "Gln", "Gly", "His", "Ile", "Leu", "Lys", "Met", "Phe", "Pro", "Ser", "Thr", "Trp", "Tyr", "Val"];
 
@@ -12,16 +10,17 @@ export var DNAsequence = '';
 export var RNAsequence = '';
 export var AAsequence = '';
 
-
-
+//generic function to replace a character in a string
 function replaceAt(string, index, replace) {
   return string.substring(0, index) + replace + string.substring(index + 1);
 }
 
+//capitalize letters for DNA and RNA
 function capitalize(sequence){
     return sequence.toUpperCase();
 }
 
+//below two functions: capitalize first letter for amino acid
 function capitalizeFirstPre(string){
   if (string.length < 3){
     return string;
@@ -45,6 +44,7 @@ function capitalizeFirst(string, indexFrom, indexTo){
   }
 }
 
+//return true if user is typing a valid AA characters; otherwise false.
 function breakDownAA(sequence){
   var start = 0;
   var end = 3;
@@ -56,20 +56,16 @@ function breakDownAA(sequence){
       start = start +4;
       end = start + 3;
     }
-
     else {
       for (var key in aa){
-
         if (sequence.substring(start,end) === aa[key]){
           check = true;
           start = start +3;
           end = start + 3;
           break;
         }
-
       }
     }
-
     if (check){
       check = false;
     }
@@ -77,7 +73,6 @@ function breakDownAA(sequence){
       return false;
     }
     else if (!check){
-
       twoCheck = true;
       start = start +3;
       end = start+3;
@@ -87,6 +82,7 @@ function breakDownAA(sequence){
   return true;
 }
 
+//below two functions retrieve the corresponding conversion between RNA and AA.
 function reduceGenCodeRNA(sequence, start, end){
   return geneticCode.reduce(function (codon, geneticCode){ return (codon.RNA === sequence.substring(start, end)) ? codon : geneticCode;},{});
 }
@@ -95,6 +91,7 @@ function reduceGenCodeAA(sequence, start, end){
    return geneticCode.reduce(function (codon, geneticCode){ return (codon.AA === sequence.substring(start, end)) ? codon : geneticCode;},{});
 }
 
+//below functions details conversion between types of sequence
 function fromRNA(toName, sequence){
   if (toName === 'DNA'){
     for (var i = 0; i < sequence.length; i++){
@@ -117,8 +114,6 @@ function fromRNA(toName, sequence){
     var end = start+3;
     while (end <= sequence.length){
       var sub = reduceGenCodeRNA(sequence, start, end);
-      // var sub = geneticCode.reduce(function (codon, geneticCode){
-      //   return (codon.RNA === sequence.substring(start, end)) ? codon : geneticCode;},{});
       sequence = sequence.replace(sequence.substring(start,end), sub.AA);
       if (sub.AA === 'Stop'){
         start = start+4;
@@ -167,8 +162,6 @@ function fromAA(toName, sequence){
       }
       else {
         var sub = reduceGenCodeAA(sequence, start, end);
-        // var sub = geneticCode.reduce(function (codon, geneticCode){
-        //   return (codon.AA === sequence.substring(start, end)) ? codon : geneticCode;},{});
         if (sub.RNA === 'GGG'){
           sequence = sequence.replace(sequence.substring(start,end), 'XXX');
         }
@@ -180,15 +173,14 @@ function fromAA(toName, sequence){
       end = start+3;
     }
     while (end > sequence.length && start < sequence.length){
-      //sequence = sequence.replace(sequence.substring(start, sequence.length), 'X');
       sequence = replaceAt(sequence, start, 'X');
-      // replaceAt(sequence, i, 'G');
       start++;
     }
   }
   return sequence;
 }
 
+//conversion between types of sequence
 function tryConvert(fromName, toName, sequence){
   if (sequence === ''){
     return '';
@@ -224,6 +216,7 @@ export default class Convert extends Component {
                   DNAsequence: '', RNAsequence:'', AAsequence:''};
   }
 
+  //handle event when user types DNA: capitalize and only takes A,T,C,G
   handleDNAChange(sequence){
     if (sequence === ''){
       this.setState({legendName:'DNA',sequence});
@@ -235,6 +228,7 @@ export default class Convert extends Component {
     }
   }
 
+  //handle event when user types RNA: capitalize and only takes U,A,G,C
   handleRNAChange(sequence){
     if (sequence === ''){
       this.setState({legendName:'RNA',sequence});
@@ -245,26 +239,25 @@ export default class Convert extends Component {
     }
   }
 
+  //handle event when user types AA: capitalize only the first character of amino acid letters,
+  //and checks if user is typing valid amino acid letters
   handleAAChange(sequence){
     if (sequence === ''){
       this.setState({legendName:'AMINO ACID',sequence});
     }
     sequence = capitalizeFirstPre(sequence);
-
     if (breakDownAA(sequence)){
         this.setState({legendName:'AMINO ACID', sequence});
     }
   }
 
-  // handleSubmit(pressed, name){
+  //handle event to send post method to save data
   handleSubmit(){
     var payload = [{
       DNAsequence:DNAsequence,
       RNAsequence:RNAsequence,
       AAsequence:AAsequence
     }];
-    // var data = JSON.stringify(payload);
-
 
     fetch('/', {
       method: 'post',
@@ -279,7 +272,7 @@ export default class Convert extends Component {
     });
   }
 
-
+  //handle event to send get method to load data.
   handleLoad(){
     fetch('/get',{
       method: 'GET',
@@ -293,20 +286,19 @@ export default class Convert extends Component {
         throw new Error("Bad");
       }
       return response.json();
-    // }).then(function(body){
     }).then((body)=>{
       var data = [];
       for (var i = 0; i < body.length; i++){
         data.push(body[i].DNAsequence);
       }
       this.setState({loadData: data});
-      // this.setState({loadData: JSON.stringify(body)});
     }).catch(err=>{
       console.log("caught error", err);
     });
 
   }
 
+  //handle event when user loads sequence from database into all the sequences variables
  handleExchange(data){
    var tempRNAsequence = tryConvert('DNA', 'RNA', data);
    var tempAAsequence = tryConvert('RNA', 'AMINO ACID', tempRNAsequence)
@@ -315,12 +307,14 @@ export default class Convert extends Component {
 
 
   render() {
-    const legendName = this.state.legendName;
+    const legendName = this.state.legendName; //current type of sequence user is typing
     const sequence = this.state.sequence;
     const bottomBuffer = {height:'200px'};
     DNAsequence = this.state.DNAsequence;
     RNAsequence = this.state.RNAsequence;
     AAsequence = this.state.AAsequence;
+
+    //conversion of sequence between DNA, RNA, AMINO ACID, depends on where the user is typing the sequence.
     if (legendName === 'DNA'){
       DNAsequence = sequence;
       RNAsequence = tryConvert('DNA', 'RNA', sequence);
@@ -340,48 +334,39 @@ export default class Convert extends Component {
 
       return (
         <div id="containerwrapper">
-        <Container
-          fieldsetID="fieldDNA1"
-          legendID="legendDNA1"
-          textareaID="textDNA1"
-          legendName="DNA"
-          sidenote="Only A, T, C or G"
-          sequence={DNAsequence}
-          onSequenceChange={this.handleDNAChange}/>
-        <Container
-          fieldsetID="fieldRNA1"
-          legendID="legendRNA1"
-          textareaID="textRNA1"
-          legendName="RNA"
-          sidenote="Only U, A, G or C"
-          sequence={RNAsequence}
-          onSequenceChange={this.handleRNAChange}/>
-        <Container
-          fieldsetID="fieldAA1"
-          legendID="legendAA1"
-          textareaID="textAA1"
-          legendName="AMINO ACID"
-          sidenote="Only the valid three-letters Amino Acids or Stop"
-          sequence={AAsequence}
-          onSequenceChange={this.handleAAChange}/>
-        <span>
-          <legend> Database </legend>
-          <ButtonGroup>
-            <Button
-                  onClick={this.handleSubmit}
-                  >
-                  {"Save"}
-            </Button>
-            <DropdownButton id="dropdown" title="Load"  onClick={this.handleLoad}>
-              {this.state.loadData.map((data, index) => (
-                <MenuItem key={index} onClick={() => this.handleExchange(data)}>{index}:  {data ? (data.length > 20 ? data.substring(0, 20)+'...' : data) : data }</MenuItem>
-              ))}
-            </DropdownButton>
-          </ButtonGroup>
-          <br/>
-        </span>
-        <div style={bottomBuffer}></div>
-      </div>
+          <Container
+            legendName="DNA"
+            sidenote="Only A, T, C or G"
+            sequence={DNAsequence}
+            onSequenceChange={this.handleDNAChange}/>
+          <Container
+            legendName="RNA"
+            sidenote="Only U, A, G or C"
+            sequence={RNAsequence}
+            onSequenceChange={this.handleRNAChange}/>
+          <Container
+            legendName="AMINO ACID"
+            sidenote="Only the valid three-letters Amino Acids or Stop"
+            sequence={AAsequence}
+            onSequenceChange={this.handleAAChange}/>
+          <span>
+            <legend> Database </legend>
+            <ButtonGroup>
+              <Button
+                    onClick={this.handleSubmit}
+                    >
+                    {"Save"}
+              </Button>
+              <DropdownButton id="dropdown" title="Load"  onClick={this.handleLoad}>
+                {this.state.loadData.map((data, index) => (
+                  <MenuItem key={index} onClick={() => this.handleExchange(data)}>{index}:  {data ? (data.length > 20 ? data.substring(0, 20)+'...' : data) : data }</MenuItem>
+                ))}
+              </DropdownButton>
+            </ButtonGroup>
+            <br/>
+          </span>
+          <div style={bottomBuffer}></div>
+        </div>
 
       );
   }
