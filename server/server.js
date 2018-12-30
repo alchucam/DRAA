@@ -58,6 +58,8 @@ app.get('/get', function(req,res){
   });
 });
 
+app.use(express.static(path.join(__dirname, 'client/build')));
+
 var server = app.listen(port, function(){
   var host = server.address().address;
   var port = server.address().port;
