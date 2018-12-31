@@ -18,8 +18,7 @@ var con = mysql.createConnection({
 //static file declaration
 app.use(express.static(path.join(__dirname, '../client/build')));
 
-
-
+//handle json data
 app.use(bodyParser.json());
 
 //listen to POST requests to /
@@ -27,7 +26,8 @@ app.post('/', function(req,res){
 
   con.connect(function(err){
     if (err) {
-      next (err);
+      console.log("failed connection");
+      return;
     }
     console.log("Connected");
   });
@@ -57,9 +57,10 @@ app.post('/', function(req,res){
 
   con.end(function(err){
     if (err) {
-      next (err);
+      console.log("failed to end connection");
+      return;
     }
-    console.log("ended");
+    console.log("connection ended");
   });
 
   res.end('Success');
@@ -69,11 +70,12 @@ app.post('/', function(req,res){
 app.get('/get', function(req,res){
   con.connect(function(err){
     if (err) {
-      next (err);
+      console.log("failed connection");
+      return;
     }
     console.log("Connected");
   });
-  
+
   con.query('SELECT * FROM draatb ORDER BY id DESC LIMIT 5', (err, result) => {
     if (err) {
       console.log(err);
@@ -81,9 +83,10 @@ app.get('/get', function(req,res){
 
     con.end(function(err){
       if (err) {
-        next (err);
+        console.log("failed to end connection");
+        return;
       }
-      console.log("ended");
+      console.log("connection ended");
     });
     console.log(result);
     res.send(result);
