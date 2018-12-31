@@ -21,10 +21,6 @@ con.connect(function(err){
 //static file declaration
 app.use(express.static(path.join(__dirname, '../client/build')));
 
-//build mode
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../client/public', '/index.html'))
-});
 
 
 app.use(bodyParser.json());
