@@ -24,14 +24,6 @@ app.use(bodyParser.json());
 //listen to POST requests to /
 app.post('/', function(req,res){
 
-  con.connect(function(err){
-    if (err) {
-      console.log("failed connection");
-      return;
-    }
-    console.log("Connected");
-  });
-
   // Get sent data.
   var data = req.body;
 
@@ -45,7 +37,7 @@ app.post('/', function(req,res){
   //insert the data
   con.query('INSERT INTO draatb (DNAsequence, RNAsequence, AAsequence) VALUES ?', [values], function(err, result){
     if (err) {
-      next(err); //Pass error to express
+      console.log(err); //Pass error to express
     }
     console.log(result);
   });
@@ -55,39 +47,20 @@ app.post('/', function(req,res){
   con.query('SELECT DNAsequence FROM draatb WHERE id=@lastid INTO @lastdna;');
   con.query('DELETE FROM draatb WHERE id < @lastid AND DNAsequence = @lastdna;');
 
-  con.end(function(err){
-    if (err) {
-      console.log("failed to end connection");
-      return;
-    }
-    console.log("connection ended");
-  });
+
 
   res.end('Success');
 });
 
 //listen to GET requests to /get
 app.get('/get', function(req,res){
-  con.connect(function(err){
-    if (err) {
-      console.log("failed connection");
-      return;
-    }
-    console.log("Connected");
-  });
 
   con.query('SELECT * FROM draatb ORDER BY id DESC LIMIT 5', (err, result) => {
     if (err) {
       console.log(err);
     }
 
-    con.end(function(err){
-      if (err) {
-        console.log("failed to end connection");
-        return;
-      }
-      console.log("connection ended");
-    });
+
     console.log(result);
     res.send(result);
 
