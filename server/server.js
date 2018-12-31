@@ -48,7 +48,6 @@ app.post('/', function(req,res){
     con.release();
   });
 
-
   res.end('Success');
 });
 
@@ -57,7 +56,13 @@ app.get('/get', function(req,res){
 
   conpool.getConnection(function(err, con){
     if (err) console.log(err);
-  con.query('SELECT * FROM draatb ORDER BY id DESC LIMIT 5');
+  con.query('SELECT * FROM draatb ORDER BY id DESC LIMIT 5', (err, result) => {
+    if (err) console.log(err);
+    else {
+      console.log(result);
+      res.send(result);
+    }
+  });
   con.release();
   });
 });
