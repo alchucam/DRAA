@@ -14,7 +14,9 @@ var con = mysql.createConnection({
 });
 
 con.connect(function(err){
-  if (err) throw err;
+  if (err) {
+    next (err);
+  }
   console.log("Connected");
 });
 
@@ -39,7 +41,9 @@ app.post('/', function(req,res){
   con.query('DELETE FROM draatb WHERE id NOT IN (SELECT * FROM (SELECT id FROM draatb ORDER BY id DESC LIMIT 5) AS t1);');
   //insert the data
   con.query('INSERT INTO draatb (DNAsequence, RNAsequence, AAsequence) VALUES ?', [values], function(err, result){
-    if (err) throw err;
+    if (err) {
+      next(err); //Pass error to express
+    }
     console.log(result);
   });
 
@@ -63,6 +67,10 @@ app.get('/get', function(req,res){
   });
 });
 
+//rest of any unmatched route, send it to index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'))
+});
 
 
 var server = app.listen(port, function(){
