@@ -6,11 +6,11 @@ const port = process.env.PORT || 5000;
 const path = require('path');
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "foo",
-  password: "bar",
+  host: process.env.host,
+  user: process.env.user,
+  password: process.env.password,
   port:3306,
-  database: "draadb",
+  database: process.env.database,
 });
 
 con.connect(function(err){

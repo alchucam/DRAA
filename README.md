@@ -51,6 +51,16 @@ You can check the current port mysql is using by
 SHOW GLOBAL VARIABLES LIKE 'PORT';
 ```
 
+For the project, create tables with following sql commands
+```
+CREATE TABLE IF NOT EXISTS draatb (
+	ID INT AUTO_INCREMENT,
+	DNAsequence VARCHAR(255) NOT NULL,
+  RNAsequence VARCHAR(255) NOT NULL,
+  AAsequence VARCHAR(255) NOT NULL,
+  PRIMARY KEY (ID)
+)
+```
 basic mysql commands:
 https://www.a2hosting.com/kb/developer-corner/mysql/managing-mysql-databases-and-users-from-the-command-line
 <br/>
