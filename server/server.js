@@ -5,12 +5,13 @@ const bodyParser = require('body-parser');
 const port = process.env.PORT || 5000;
 const path = require('path');
 
-var con = mysql.createConnection({
+var conpool = mysql.createPool({
   host: process.env.host,
   user: process.env.user,
   password: process.env.password,
   port:3306,
   database: process.env.database,
+  connectionlimit: 50,
 });
 
 
@@ -32,21 +33,20 @@ app.post('/', function(req,res){
   values.push([data[0].DNAsequence, data[0].RNAsequence, data[0].AAsequence]);
 
   // Perform a MySQL query.
-  //keep the latest 5 queries, and delete the rest.
-  con.query('DELETE FROM draatb WHERE id NOT IN (SELECT * FROM (SELECT id FROM draatb ORDER BY id DESC LIMIT 5) AS t1);');
-  //insert the data
-  con.query('INSERT INTO draatb (DNAsequence, RNAsequence, AAsequence) VALUES ?', [values], function(err, result){
-    if (err) {
-      console.log(err); //Pass error to express
-    }
-    console.log(result);
+  conpool.getConnection(function(err, con){
+    if (err) console.log(err);
+
+    //keep the latest 5 queries, and delete the rest.
+    con.query('DELETE FROM draatb WHERE id NOT IN (SELECT * FROM (SELECT id FROM draatb ORDER BY id DESC LIMIT 5) AS t1);');
+    //insert the data
+    con.query('INSERT INTO draatb (DNAsequence, RNAsequence, AAsequence) VALUES ?', [values]);
+
+    //check the duplicates, delete the duplicates
+    con.query('SELECT MAX(id) FROM draatb INTO @lastid;');
+    con.query('SELECT DNAsequence FROM draatb WHERE id=@lastid INTO @lastdna;');
+    con.query('DELETE FROM draatb WHERE id < @lastid AND DNAsequence = @lastdna;');
+    con.release();
   });
-
-  //check the duplicates, delete the duplicates
-  con.query('SELECT MAX(id) FROM draatb INTO @lastid;');
-  con.query('SELECT DNAsequence FROM draatb WHERE id=@lastid INTO @lastdna;');
-  con.query('DELETE FROM draatb WHERE id < @lastid AND DNAsequence = @lastdna;');
-
 
 
   res.end('Success');
@@ -55,15 +55,10 @@ app.post('/', function(req,res){
 //listen to GET requests to /get
 app.get('/get', function(req,res){
 
-  con.query('SELECT * FROM draatb ORDER BY id DESC LIMIT 5', (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-
-
-    console.log(result);
-    res.send(result);
-
+  conpool.getConnection(function(err, con){
+    if (err) console.log(err);
+  con.query('SELECT * FROM draatb ORDER BY id DESC LIMIT 5');
+  con.release();
   });
 });
 
