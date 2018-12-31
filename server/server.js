@@ -13,12 +13,7 @@ var con = mysql.createConnection({
   database: process.env.database,
 });
 
-con.connect(function(err){
-  if (err) {
-    next (err);
-  }
-  console.log("Connected");
-});
+
 
 //static file declaration
 app.use(express.static(path.join(__dirname, '../client/build')));
@@ -29,6 +24,14 @@ app.use(bodyParser.json());
 
 //listen to POST requests to /
 app.post('/', function(req,res){
+
+  con.connect(function(err){
+    if (err) {
+      next (err);
+    }
+    console.log("Connected");
+  });
+
   // Get sent data.
   var data = req.body;
 
@@ -51,19 +54,40 @@ app.post('/', function(req,res){
   con.query('SELECT MAX(id) FROM draatb INTO @lastid;');
   con.query('SELECT DNAsequence FROM draatb WHERE id=@lastid INTO @lastdna;');
   con.query('DELETE FROM draatb WHERE id < @lastid AND DNAsequence = @lastdna;');
+
+  con.end(function(err){
+    if (err) {
+      next (err);
+    }
+    console.log("ended");
+  });
+
   res.end('Success');
 });
 
 //listen to GET requests to /get
 app.get('/get', function(req,res){
+  con.connect(function(err){
+    if (err) {
+      next (err);
+    }
+    console.log("Connected");
+  });
+  
   con.query('SELECT * FROM draatb ORDER BY id DESC LIMIT 5', (err, result) => {
     if (err) {
       console.log(err);
     }
-    else {
-      console.log(result);
-      res.send(result);
-    }
+
+    con.end(function(err){
+      if (err) {
+        next (err);
+      }
+      console.log("ended");
+    });
+    console.log(result);
+    res.send(result);
+
   });
 });
 
