@@ -1,7 +1,16 @@
 # DRAA
-visualization of DNA, RNA and Amino Acids sequences with user interface
+Interactive tools of concurrent translation/transcription between DNA, RNA and Amino Acids sequences,
+along with visualization of mutated sequences
 
-## run environment
+## Description
+
+In the main page, user can type any of DNA, RNA or Amino Acids sequences, and the application will convert the sequence to the other types of sequences concurrently.
+With MySQL database connected, user can save and load up to 5 recent sequences.
+In the mutate page, the sequence from the main page can be mutated with the small probability (3%) per character per generation (1 second).
+Such mutated sequence is visualized with a chart, showing the types of sequence mutation.
+Lastly, a repair function to repair the mutated sequence is implemented with genetic algorithm
+
+## run environment : development
 for react, in client folder, run
 ```
 npm start
@@ -12,22 +21,33 @@ nodemon server.js
 node server.js
 ```
 
-## heroku environment
+## heroku environment : production
 add "start":"node server.js" under scripts in server/package.json
 ```
 heroku create
 git push heroku master
 ```
 
+## Programming Language
 
-##What was done: (Self Note)
-### Server side (Node.js)
-### Setup
+JavaScript
+
+## Tools/IDE
+
+React.js, Node.js, Express.js, MySQL, Heroku, Atom
+
+<br/>
+## What was done : Self Note
+
+### env
+https://www.twilio.com/blog/2017/08/working-with-environment-variables-in-node-js.html
+
+### Server side (Node.js) : Setup
 ```
 npm install --save pg dotenv
 ```
 
-#### mysql.
+#### mysql
 Since MySQL 8.0, uses a new default authentication plugin (caching sha2 password),
 needs to create a new user with a password of mysql_native_password:
 https://stackoverflow.com/questions/50373427/node-js-cant-authenticate-to-mysql-8-0

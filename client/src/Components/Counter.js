@@ -42,12 +42,11 @@ function insertion(string, index, insert){
 
 //one in 30 million nucleotides each generation
 //= 3.33e-8
-//Currently, it is set to 1 generation has 0.03% chance of mutate rate per DNA sequence character
+//Currently, it is set to 1 generation has 3.33% chance of mutate rate per DNA sequence character
 function mutation(sequence){
   for (var i = 0; i < sequence.length; i++){
     var random = Math.random();
-    //0.0333% for 1,000,000 generation
-    // if (random < 0.0333){
+    //3.33% for 10,000 generation
     if (random < 0.0333){
       var mutType = Math.floor(Math.random()*3);
       var leafRandom = Math.floor(Math.random()*4);

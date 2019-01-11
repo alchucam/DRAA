@@ -5,6 +5,10 @@ const bodyParser = require('body-parser');
 const port = process.env.PORT || 5000;
 const path = require('path');
 
+if (process.env.NODE_ENV !== 'production'){
+  require('dotenv').load();
+}
+
 var conpool = mysql.createPool({
   host: process.env.host,
   user: process.env.user,
@@ -13,7 +17,6 @@ var conpool = mysql.createPool({
   database: process.env.database,
   connectionlimit: 50,
 });
-
 
 
 //static file declaration
