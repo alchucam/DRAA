@@ -5,9 +5,9 @@ along with visualization of mutated sequences
 ## Description
 
 In the main page, user can type any of DNA, RNA or Amino Acids sequences, and the application will convert the sequence to the other types of sequences concurrently.
-With MySQL database connected, user can save and load up to 5 recent sequences.
-In the mutate page, the sequence from the main page can be mutated with the small probability (3%) per character per generation (1 second).
-Such mutated sequence is visualized with a chart, showing the types of sequence mutation.
+With MySQL database connected, user can save and load up to 5 recent sequences. <br/>
+In the mutate page, the sequence from the main page can be mutated with the small probability (3%) per character per generation (1 second). <br/>
+Such mutated sequence is visualized with a chart, showing the types of sequence mutation.<br/>
 Lastly, a repair function to repair the mutated sequence is implemented with genetic algorithm
 
 ## run environment : development
@@ -37,6 +37,7 @@ JavaScript
 React.js, Node.js, Express.js, MySQL, Heroku, Atom
 
 <br/>
+
 ## What was done : Self Note
 
 ### env
