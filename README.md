@@ -48,7 +48,7 @@ https://www.twilio.com/blog/2017/08/working-with-environment-variables-in-node-j
 npm install --save pg dotenv
 ```
 
-#### mysql
+### mysql
 Since MySQL 8.0, uses a new default authentication plugin (caching sha2 password),
 needs to create a new user with a password of mysql_native_password:
 https://stackoverflow.com/questions/50373427/node-js-cant-authenticate-to-mysql-8-0
@@ -87,7 +87,7 @@ https://www.a2hosting.com/kb/developer-corner/mysql/managing-mysql-databases-and
 <br/>
 https://www.pantz.org/software/mysql/mysqlcommands.html
 
-#### interaction between frontend and backend
+### interaction between frontend and backend
 https://stackoverflow.com/questions/41332643/sending-data-to-database-in-react-js-web-application
 <br/>
 https://hashnode.com/post/how-can-use-react-js-node-js-mysql-together-cjdlfbukh01vqn9wuaucmng6h
