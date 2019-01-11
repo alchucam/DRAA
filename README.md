@@ -10,6 +10,9 @@ In the mutate page, the sequence from the main page can be mutated with the smal
 Such mutated sequence is visualized with a chart, showing the types of sequence mutation.<br/>
 Lastly, a repair function to repair the mutated sequence is implemented with genetic algorithm
 
+![](/images/main.gif)
+![](/images/mutate.gif)
+
 ## run environment : development
 for react, in client folder, run
 ```
