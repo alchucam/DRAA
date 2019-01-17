@@ -30,6 +30,14 @@ add "start":"node server.js" under scripts in server/package.json
 heroku create
 git push heroku master
 ```
+if want to add to existing heroku app
+```
+heroku list
+heroku git:remote -a PROJECT_NAME -r heroku
+git push heroku master
+```
+-a defines the name of the project,
+-r defines the name of the git remote
 
 ## Programming Language
 
